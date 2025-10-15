@@ -1,6 +1,6 @@
-
 import React from 'react';
-import { User, Account, ViewType } from '../../types';
+import { Link } from 'react-router-dom';
+import { User, Account } from '../../types';
 import Button from '../common/Button';
 
 interface AccountCardProps {
@@ -39,10 +39,9 @@ const AccountCard: React.FC<AccountCardProps> = ({ account }) => {
 
 interface DashboardScreenProps {
     user: User;
-    onNavigate: (view: ViewType) => void;
 }
 
-const DashboardScreen: React.FC<DashboardScreenProps> = ({ user, onNavigate }) => {
+const DashboardScreen: React.FC<DashboardScreenProps> = ({ user }) => {
     const canTransfer = user.accounts.filter(acc => acc.type === 'Checking' || acc.type === 'Savings').length > 1;
 
     const applicationOptions: { label: string; type: Account['type']; requiresPlatinum: boolean }[] = [
@@ -66,19 +65,24 @@ const DashboardScreen: React.FC<DashboardScreenProps> = ({ user, onNavigate }) =
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
                     <div className="bg-gray-800 rounded-lg p-6 shadow-md flex flex-col items-center justify-center text-center">
                          <h3 className="text-lg font-semibold mb-4">Transfer Funds</h3>
-                        <Button onClick={() => onNavigate({ name: 'transfer' })} disabled={!canTransfer} fullWidth>
-                            Transfer Balance
-                        </Button>
+                        <Link to="/transfer" className="w-full">
+                            <Button disabled={!canTransfer} fullWidth>
+                                Transfer Balance
+                            </Button>
+                        </Link>
                         {!canTransfer && <p className="text-xs text-gray-500 mt-2">Requires at least two deposit accounts.</p>}
                     </div>
                     {applicationOptions.map(opt => {
                         if (opt.requiresPlatinum && !user.canApplyForPlatinum) return null;
+                        const urlEncodedType = encodeURIComponent(opt.type);
                         return (
                              <div key={opt.type} className="bg-gray-800 rounded-lg p-6 shadow-md flex flex-col items-center justify-center text-center">
                                 <h3 className="text-lg font-semibold mb-4">{opt.label}</h3>
-                                <Button onClick={() => onNavigate({ name: 'apply', for: opt.type })} fullWidth>
-                                    Apply Now
-                                </Button>
+                                <Link to={`/apply/${urlEncodedType}`} className="w-full">
+                                    <Button fullWidth>
+                                        Apply Now
+                                    </Button>
+                                </Link>
                             </div>
                         )
                     })}

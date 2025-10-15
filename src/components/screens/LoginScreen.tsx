@@ -1,15 +1,13 @@
-
 import React, { useState } from 'react';
-import { ViewType } from '../../types';
+import { Link } from 'react-router-dom';
 import Button from '../common/Button';
 import Input from '../common/Input';
 
 interface LoginScreenProps {
     onLogin: (username: string, password: string) => 'success' | 'locked' | 'invalid';
-    onNavigate: (view: ViewType) => void;
 }
 
-const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onNavigate }) => {
+const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -57,9 +55,9 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onNavigate }) => {
 
                     <div className="flex items-center justify-end">
                         <div className="text-sm">
-                            <a href="#" onClick={(e) => { e.preventDefault(); onNavigate({ name: 'resetPassword' }); }} className="font-medium text-teal-400 hover:text-teal-300">
+                            <Link to="/reset-password" className="font-medium text-teal-400 hover:text-teal-300">
                                 Forgot your password?
-                            </a>
+                            </Link>
                         </div>
                     </div>
 

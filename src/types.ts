@@ -17,13 +17,6 @@ export interface User {
   unlockPasswordHash?: string;
 }
 
-export type ViewType =
-  | { name: 'login' }
-  | { name: 'resetPassword' }
-  | { name: 'dashboard' }
-  | { name: 'transfer' }
-  | { name: 'apply'; for: Account['type'] };
-
 export interface ApplicationData {
     firstName: string;
     middleName: string;

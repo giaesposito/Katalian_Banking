@@ -1,16 +1,16 @@
-
 import React, { useState, useMemo } from 'react';
-import { User, ViewType } from '../../types';
+import { useNavigate } from 'react-router-dom';
+import { User } from '../../types';
 import Button from '../common/Button';
 import Input from '../common/Input';
 
 interface TransferScreenProps {
     user: User;
-    onNavigate: (view: ViewType) => void;
     onTransfer: (fromAccountId: string, toAccountId: string, amount: number) => void;
 }
 
-const TransferScreen: React.FC<TransferScreenProps> = ({ user, onNavigate, onTransfer }) => {
+const TransferScreen: React.FC<TransferScreenProps> = ({ user, onTransfer }) => {
+    const navigate = useNavigate();
     const depositAccounts = useMemo(() => user.accounts.filter(acc => acc.type === 'Checking' || acc.type === 'Savings'), [user.accounts]);
 
     const initialFromId = depositAccounts[0]?.id || '';
@@ -92,7 +92,7 @@ const TransferScreen: React.FC<TransferScreenProps> = ({ user, onNavigate, onTra
             <div className="w-full max-w-lg p-8 space-y-6 bg-gray-800 rounded-xl shadow-lg">
                 <div className="flex items-center justify-between">
                      <h2 className="text-2xl font-bold text-white">{isConfirming ? 'Confirm Your Transfer' : 'Transfer Funds'}</h2>
-                     <button onClick={() => onNavigate({ name: 'dashboard' })} className="text-gray-400 hover:text-white transition">&times;</button>
+                     <button onClick={() => navigate('/dashboard')} className="text-gray-400 hover:text-white transition">&times;</button>
                 </div>
 
                 {isConfirming ? (
@@ -135,7 +135,7 @@ const TransferScreen: React.FC<TransferScreenProps> = ({ user, onNavigate, onTra
                             required
                         />
                         <div className="flex gap-4">
-                            <Button onClick={() => onNavigate({ name: 'dashboard' })} variant="secondary" fullWidth>Cancel</Button>
+                            <Button onClick={() => navigate('/dashboard')} variant="secondary" fullWidth>Cancel</Button>
                             <Button type="submit" fullWidth>Review Transfer</Button>
                         </div>
                     </form>

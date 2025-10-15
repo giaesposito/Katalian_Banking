@@ -1,6 +1,5 @@
-
 import React, { useState, useEffect } from 'react';
-import { User, ViewType, Account, ApplicationData } from '../../types';
+import { User, Account, ApplicationData } from '../../types';
 import Button from '../common/Button';
 import Input from '../common/Input';
 import Spinner from '../common/Spinner';
@@ -9,7 +8,7 @@ import { STATES } from '../../constants';
 interface ApplicationScreenProps {
     user: User;
     accountType: Account['type'];
-    onNavigate: (view: ViewType) => void;
+    onNavigate: () => void;
     onSubmit: (appData: ApplicationData, accountType: Account['type']) => void;
 }
 
@@ -132,7 +131,7 @@ const ApplicationScreen: React.FC<ApplicationScreenProps> = ({ user, accountType
             <div className="w-full max-w-2xl p-8 bg-gray-800 rounded-xl shadow-lg">
                 <div className="flex items-center justify-between mb-8">
                      <h2 className="text-2xl font-bold text-white">Apply for a {accountType}</h2>
-                     <button onClick={() => onNavigate({ name: 'dashboard' })} className="text-gray-400 hover:text-white transition">&times;</button>
+                     <button onClick={onNavigate} className="text-gray-400 hover:text-white transition">&times;</button>
                 </div>
 
                 {step <= maxSteps && (
