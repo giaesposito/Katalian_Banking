@@ -3,38 +3,26 @@
   <head>
     <script defer async client-code="KA-1509469-01" src="https://static.katalon.com/libs/traffic-agent/v1/traffic-agent.min.js"></script>
 <script>
-  function setTrueTestSessionWithIP() {
-    // Wait for TrueTest to be available
-    if (typeof TrueTest === 'undefined') {
-      setTimeout(setTrueTestSessionWithIP, 100);
-      return;
-    }
 
-    fetch('https://www.cloudflare.com/cdn-cgi/trace')
-      .then(response => response.text())
-      .then(data => {
-        // Parse IP from response
-        const ipMatch = data.match(/ip=([^\n]+)/);
-        const ip = ipMatch ? ipMatch[1] : 'UNKNOWN';
-
-        TrueTest.setSessionAttributes({
-          ipAddress: ip,
-          // Add other attributes as needed:
-          // session_name: "...",
-          // userId: "...",
-        });
-
-        console.log("TrueTest session set with IP:", ip);
-      })
-      .catch(error => {
-        console.error('IP fetch failed:', error);
-        TrueTest.setSessionAttributes({
-          ipAddress: "FETCH_FAILED",
-        });
+  function handleIPResponse(data) {
+    function setSession() {
+      if (typeof TrueTest === 'undefined') {
+        setTimeout(setSession, 100);
+        return;
+      }
+      
+      TrueTest.setSessionAttributes({
+        ipAddress: data.ip,
       });
+      console.log("TrueTest session set with IP:", data.ip);
+    }
+    setSession();
   }
 
-  setTrueTestSessionWithIP();
+
+  const script = document.createElement('script');
+  script.src = 'https://api.ipify.org?format=jsonp&callback=handleIPResponse';
+  document.head.appendChild(script);
 </script>
     
     <meta charset="UTF-8" />
