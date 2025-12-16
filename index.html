@@ -2,6 +2,28 @@
 <html lang="en">
   <head>
     <script defer async client-code="KA-1509469-01" src="https://static.katalon.com/libs/traffic-agent/v1/traffic-agent.min.js"></script>
+    <script>
+
+  function initTrueTest() {
+    if (typeof TrueTest === 'undefined') {
+      setTimeout(initTrueTest, 50);
+      return;
+    }
+
+    window.handleIPCallback = function(data) {
+      TrueTest.setSessionAttributes({
+        ipAddress: data.ip,
+      });
+      console.log("TrueTest IP set:", data.ip);
+    };
+
+    const script = document.createElement('script');
+    script.src = 'https://api.ipify.org?format=jsonp&callback=handleIPCallback';
+    document.head.appendChild(script);
+  }
+
+  initTrueTest();
+</script>
     
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
