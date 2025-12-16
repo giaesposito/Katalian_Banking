@@ -2,28 +2,6 @@
 <html lang="en">
   <head>
     <script defer async client-code="KA-1509469-01" src="https://static.katalon.com/libs/traffic-agent/v1/traffic-agent.min.js"></script>
-<script>
-
-  function handleIPResponse(data) {
-    function setSession() {
-      if (typeof TrueTest === 'undefined') {
-        setTimeout(setSession, 100);
-        return;
-      }
-      
-      TrueTest.setSessionAttributes({
-        ipAddress: data.ip,
-      });
-      console.log("TrueTest session set with IP:", data.ip);
-    }
-    setSession();
-  }
-
-
-  const script = document.createElement('script');
-  script.src = 'https://api.ipify.org?format=jsonp&callback=handleIPResponse';
-  document.head.appendChild(script);
-</script>
     
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
