@@ -1,20 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <script defer async client-code="KA-1509469-01" src="https://static.katalon.com/libs/traffic-agent/v1/traffic-agent.min.js"></script>
-    <script>
-
-  function initTrueTest() {
+<script defer async client-code="KA-1509469-01" src="https://static.katalon.com/libs/traffic-agent/v1/traffic-agent.min.js"></script>
+<script src="https://static.katalon.com/libs/traffic-agent/v1/truetest-sdk.min.js"></script>
+<script>
+  function initTrueTestSession() {
     if (typeof TrueTest === 'undefined') {
-      setTimeout(initTrueTest, 50);
+      setTimeout(initTrueTestSession, 100);
       return;
     }
-
     window.handleIPCallback = function(data) {
       TrueTest.setSessionAttributes({
         ipAddress: data.ip,
       });
-      console.log("TrueTest IP set:", data.ip);
+      console.log("TrueTest session set with IP:", data.ip);
     };
 
     const script = document.createElement('script');
@@ -22,7 +21,7 @@
     document.head.appendChild(script);
   }
 
-  initTrueTest();
+  initTrueTestSession();
 </script>
     
     <meta charset="UTF-8" />
