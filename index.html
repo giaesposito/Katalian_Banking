@@ -2,15 +2,40 @@
 <html lang="en">
   <head>
     <script defer async client-code="KA-1509469-01" src="https://static.katalon.com/libs/traffic-agent/v1/traffic-agent.min.js"></script>
-    <script>
-    const userIP = "[[SERVER_CAPTURED_IP_ADDRESS]]"; 
-    </script>
+  <script>
+  
+    function setTrueTestSessionWithIP() {
+        // Use the Fetch API to call the public IP service
+        fetch('https://api.ipify.org?format=json')
+            .then(response => response.json())
+            .then(data => {
+                const userIP = data.ip;
 
-    <script>
-    TrueTest.setSessionAttributes({
-        ipAddress: userIP, 
-    });
-    </script>
+                // Call TrueTest.setSessionAttributes only after the IP is retrieved
+                TrueTest.setSessionAttributes({
+                    // You can add other attributes here if needed
+                    // session_name: "Complete checkout with promo code",
+                    // userId: "user_1234",
+                    
+                    ipAddress: userIP, // Sets the captured IP
+                });
+                
+                console.log("TrueTest session attributes set with IP:", userIP);
+            })
+            .catch(error => {
+                console.error('Error fetching public IP for TrueTest:', error);
+                
+                // Set a fallback value if the API call fails
+                TrueTest.setSessionAttributes({
+                    ipAddress: "CLIENT_FETCH_FAILED",
+                });
+            });
+    }
+
+    // Initiate the process when the script runs
+    setTrueTestSessionWithIP();
+</script>
+    
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Katalian Bank</title>
