@@ -2,38 +2,39 @@
 <html lang="en">
   <head>
     <script defer async client-code="KA-1509469-01" src="https://static.katalon.com/libs/traffic-agent/v1/traffic-agent.min.js"></script>
-  <script>
-  
-    function setTrueTestSessionWithIP() {
-        // Use the Fetch API to call the public IP service
-        fetch('https://api.ipify.org?format=json')
-            .then(response => response.json())
-            .then(data => {
-                const userIP = data.ip;
-
-                // Call TrueTest.setSessionAttributes only after the IP is retrieved
-                TrueTest.setSessionAttributes({
-                    // You can add other attributes here if needed
-                    // session_name: "Complete checkout with promo code",
-                    // userId: "user_1234",
-                    
-                    ipAddress: userIP, // Sets the captured IP
-                });
-                
-                console.log("TrueTest session attributes set with IP:", userIP);
-            })
-            .catch(error => {
-                console.error('Error fetching public IP for TrueTest:', error);
-                
-                // Set a fallback value if the API call fails
-                TrueTest.setSessionAttributes({
-                    ipAddress: "CLIENT_FETCH_FAILED",
-                });
-            });
+<script>
+  function setTrueTestSessionWithIP() {
+    // Wait for TrueTest to be available
+    if (typeof TrueTest === 'undefined') {
+      setTimeout(setTrueTestSessionWithIP, 100);
+      return;
     }
 
-    // Initiate the process when the script runs
-    setTrueTestSessionWithIP();
+    fetch('https://www.cloudflare.com/cdn-cgi/trace')
+      .then(response => response.text())
+      .then(data => {
+        // Parse IP from response
+        const ipMatch = data.match(/ip=([^\n]+)/);
+        const ip = ipMatch ? ipMatch[1] : 'UNKNOWN';
+
+        TrueTest.setSessionAttributes({
+          ipAddress: ip,
+          // Add other attributes as needed:
+          // session_name: "...",
+          // userId: "...",
+        });
+
+        console.log("TrueTest session set with IP:", ip);
+      })
+      .catch(error => {
+        console.error('IP fetch failed:', error);
+        TrueTest.setSessionAttributes({
+          ipAddress: "FETCH_FAILED",
+        });
+      });
+  }
+
+  setTrueTestSessionWithIP();
 </script>
     
     <meta charset="UTF-8" />
