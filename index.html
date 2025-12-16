@@ -5,23 +5,34 @@
 <script src="https://static.katalon.com/libs/traffic-agent/v1/truetest-sdk.min.js"></script>
 <script>
   function initTrueTestSession() {
-    if (typeof TrueTest === 'undefined') {
-      setTimeout(initTrueTestSession, 100);
+    if (typeof TrueTest === 'undefined' || typeof TrueTest.setSessionAttributes !== 'function') {
+      console.log("Waiting for TrueTest SDK...");
+      setTimeout(initTrueTestSession, 200);
       return;
     }
     window.handleIPCallback = function(data) {
-      TrueTest.setSessionAttributes({
-        ipAddress: data.ip,
-      });
-      console.log("TrueTest session set with IP:", data.ip);
+      try {
+        TrueTest.setSessionAttributes({
+          ipAddress: data.ip,
+        });
+        console.log("✅ TrueTest session set with IP:", data.ip);
+      } catch (e) {
+        console.error("Failed to set session attributes:", e);
+      }
     };
 
     const script = document.createElement('script');
     script.src = 'https://api.ipify.org?format=jsonp&callback=handleIPCallback';
+    script.onerror = () => console.error("Failed to fetch IP");
     document.head.appendChild(script);
   }
 
-  initTrueTestSession();
+  // Start after page loads
+  if (document.readyState === 'complete') {
+    initTrueTestSession();
+  } else {
+    window.addEventListener('load', initTrueTestSession);
+  }
 </script>
     
     <meta charset="UTF-8" />
