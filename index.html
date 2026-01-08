@@ -1,40 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-<script defer async client-code="KA-1509469-06" src="https://static.katalon.com/libs/traffic-agent/v1/traffic-agent.min.js"></script>
-<script src="https://static.katalon.com/libs/traffic-agent/v1/truetest-sdk.min.js"></script>
-<script>
-  function initTrueTestSession() {
-    if (typeof TrueTest === 'undefined' || typeof TrueTest.setSessionAttributes !== 'function') {
-      console.log("Waiting for TrueTest SDK...");
-      setTimeout(initTrueTestSession, 200);
-      return;
-    }
-    window.handleIPCallback = function(data) {
-      try {
-        TrueTest.setSessionAttributes({
-          ipAddress: data.ip,
-        });
-        console.log("✅ TrueTest session set with IP:", data.ip);
-      } catch (e) {
-        console.error("Failed to set session attributes:", e);
-      }
-    };
-
-    const script = document.createElement('script');
-    script.src = 'https://api.ipify.org?format=jsonp&callback=handleIPCallback';
-    script.onerror = () => console.error("Failed to fetch IP");
-    document.head.appendChild(script);
-  }
-
-  // Start after page loads
-  if (document.readyState === 'complete') {
-    initTrueTestSession();
-  } else {
-    window.addEventListener('load', initTrueTestSession);
-  }
-</script>
-    
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Katalian Bank</title>
@@ -50,7 +16,8 @@
     "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
     "vite": "https://aistudiocdn.com/vite@^7.1.10",
     "@vitejs/plugin-react": "https://aistudiocdn.com/@vitejs/plugin-react@^5.0.4",
-    "react-router-dom": "https://aistudiocdn.com/react-router-dom@^6.25.1"
+    "react-router-dom": "https://aistudiocdn.com/react-router-dom@^6.25.1",
+    "@google/genai": "https://esm.sh/@google/genai@^1.34.0"
   }
 }
 </script>

@@ -1,4 +1,5 @@
-import React, { useState, useCallback } from 'react';
+
+import React, { useState, useCallback, useEffect } from 'react';
 import { Routes, Route, useNavigate, Navigate, Outlet, useParams } from 'react-router-dom';
 import { User, Account, ApplicationData } from './types';
 import { USERS } from './constants';
@@ -7,7 +8,10 @@ import DashboardScreen from './components/screens/DashboardScreen';
 import PasswordResetScreen from './components/screens/PasswordResetScreen';
 import TransferScreen from './components/screens/TransferScreen';
 import ApplicationScreen from './components/screens/ApplicationScreen';
+import AdminScreen from './components/screens/AdminScreen';
 import Header from './components/common/Header';
+import AiAssistant from './components/common/AiAssistant';
+import { mockApi } from './api/mockApi';
 
 // Wrapper for ApplicationScreen to get URL param
 const ApplicationScreenWrapper: React.FC<{
@@ -36,6 +40,15 @@ const App: React.FC = () => {
     const [users, setUsers] = useState<User[]>(USERS);
     const [currentUser, setCurrentUser] = useState<User | null>(null);
     const navigate = useNavigate();
+
+    // Use effect to "refresh" user list from our mock API if needed
+    useEffect(() => {
+        const initData = async () => {
+            const data = await mockApi.getUsers();
+            setUsers(data);
+        };
+        initData();
+    }, []);
 
     const handleLogin = (username: string, password: string):'success' | 'locked' | 'invalid' => {
         const user = users.find(u => u.username === username);
@@ -127,12 +140,14 @@ const App: React.FC = () => {
                             <Route path="/dashboard" element={currentUser && <DashboardScreen user={currentUser} />} />
                             <Route path="/transfer" element={currentUser && <TransferScreen user={currentUser} onTransfer={handleTransfer} />} />
                             <Route path="/apply/:accountType" element={currentUser && <ApplicationScreenWrapper user={currentUser} onSubmit={handleApplicationSubmit} />} />
+                            <Route path="/admin" element={<AdminScreen />} />
                         </Route>
 
                         <Route path="*" element={<Navigate to={currentUser ? "/dashboard" : "/login"} replace />} />
                     </Routes>
                 </main>
             </div>
+            {currentUser && <AiAssistant allUsers={users} />}
         </div>
     );
 };
