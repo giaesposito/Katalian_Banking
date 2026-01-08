@@ -13,17 +13,15 @@ import Header from './components/common/Header';
 import AiAssistant from './components/common/AiAssistant';
 import { mockApi } from './api/mockApi';
 
-// Wrapper for ApplicationScreen to get URL param
 const ApplicationScreenWrapper: React.FC<{
     user: User, 
     onSubmit: (appData: ApplicationData, accountType: Account['type']) => void
 }> = ({ user, onSubmit }) => {
     const { accountType: accountTypeFromUrl } = useParams<{ accountType: string }>();
     const navigate = useNavigate();
-
     const accountType = accountTypeFromUrl ? decodeURIComponent(accountTypeFromUrl) as Account['type'] : undefined;
-    
     const validAccountTypes: Account['type'][] = ['Checking', 'Savings', 'Credit Card', 'Platinum Credit Card'];
+    
     if (!accountType || !validAccountTypes.includes(accountType)) {
         return <Navigate to="/dashboard" replace />;
     }
@@ -41,7 +39,6 @@ const App: React.FC = () => {
     const [currentUser, setCurrentUser] = useState<User | null>(null);
     const navigate = useNavigate();
 
-    // Use effect to "refresh" user list from our mock API if needed
     useEffect(() => {
         const initData = async () => {
             const data = await mockApi.getUsers();
@@ -76,16 +73,11 @@ const App: React.FC = () => {
         navigate('/login');
     }, [navigate]);
 
-    const handleApplicationSubmit = (appData: ApplicationData, accountType: Account['type']) => {
+    const handleApplicationSubmit = async (appData: ApplicationData, accountType: Account['type']) => {
         if (!currentUser) return;
 
-        const newAccount: Account = {
-            id: `acc${currentUser.id}-${currentUser.accounts.length + 1}`,
-            type: accountType,
-            accountNumber: `...${Math.floor(1000 + Math.random() * 9000)}`,
-            balance: appData.initialDeposit || 0,
-            status: accountType.includes('Card') ? 'Pending' : undefined,
-        };
+        // Simulate POST call
+        const newAccount = await mockApi.submitApplication(currentUser.id, appData, accountType);
         
         const updatedUser = {
             ...currentUser,
@@ -105,8 +97,11 @@ const App: React.FC = () => {
         navigate('/dashboard');
     };
 
-    const handleTransfer = (fromAccountId: string, toAccountId: string, amount: number) => {
+    const handleTransfer = async (fromAccountId: string, toAccountId: string, amount: number) => {
         if (!currentUser) return;
+
+        // Simulate POST call
+        await mockApi.executeTransfer(fromAccountId, toAccountId, amount);
 
         const updatedAccounts = currentUser.accounts.map(acc => {
             if (acc.id === fromAccountId) return { ...acc, balance: acc.balance - amount };
