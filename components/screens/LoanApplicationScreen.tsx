@@ -90,14 +90,14 @@ const LoanApplicationScreen: React.FC<LoanApplicationScreenProps> = ({ user, loa
                     <h2 className="text-3xl font-bold text-white">{loanType} Loan</h2>
                     <p className="text-gray-500 text-sm">Step {step} of 3</p>
                 </div>
-                <button onClick={onNavigate} className="text-gray-500 hover:text-white">&times;</button>
+                <button onClick={() => onNavigate()} className="text-gray-500 hover:text-white">&times;</button>
             </div>
 
             <form onSubmit={handleSubmit}>
                 <div className="mb-10">{renderStep()}</div>
                 
                 <div className="flex justify-between pt-6 border-t border-gray-700">
-                    <Button type="button" variant="secondary" onClick={step === 1 ? onNavigate : handleBack}>
+                    <Button type="button" variant="secondary" onClick={step === 1 ? () => onNavigate() : handleBack}>
                         {step === 1 ? 'Cancel' : 'Back'}
                     </Button>
                     {step < 3 ? (

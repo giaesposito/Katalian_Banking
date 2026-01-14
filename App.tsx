@@ -25,7 +25,7 @@ const ApplicationScreenWrapper: React.FC<{
     const { accountType: accountTypeFromUrl } = useParams<{ accountType: string }>();
     const accountType = accountTypeFromUrl ? decodeURIComponent(accountTypeFromUrl) as Account['type'] : undefined;
     if (!accountType) return <Navigate to="/dashboard" replace />;
-    return <ApplicationScreen user={user} accountType={accountType} onNavigate={() => onNavigate({name:'dashboard'})} onSubmit={onSubmit} />;
+    return <ApplicationScreen user={user} accountType={accountType} onNavigate={onNavigate} onSubmit={onSubmit} />;
 }
 
 const LoanApplicationWrapper: React.FC<{
@@ -36,7 +36,7 @@ const LoanApplicationWrapper: React.FC<{
     const { loanType } = useParams<{ loanType: string }>();
     const type = loanType as Loan['type'];
     if (!type) return <Navigate to="/loans" replace />;
-    return <LoanApplicationScreen user={user} loanType={type} onNavigate={() => onNavigate({name:'loans'})} onSubmit={onSubmit} />;
+    return <LoanApplicationScreen user={user} loanType={type} onNavigate={() => onNavigate({ name: 'loans' })} onSubmit={onSubmit} />;
 }
 
 const App: React.FC = () => {
@@ -115,6 +115,11 @@ const App: React.FC = () => {
         navigate('/dashboard');
     };
 
+    const ProtectedRoute: React.FC<{ user: User | null }> = ({ user }) => {
+        if (!user) return <Navigate to="/login" replace />;
+        return <Outlet />;
+    };
+
     return (
         <div className="min-h-screen bg-gray-900 flex flex-col items-center p-4 sm:p-8">
             <div className="w-full max-w-6xl mx-auto">
@@ -140,11 +145,6 @@ const App: React.FC = () => {
             {currentUser && <AiAssistant allUsers={users} />}
         </div>
     );
-};
-
-const ProtectedRoute: React.FC<{ user: User | null }> = ({ user }) => {
-    if (!user) return <Navigate to="/login" replace />;
-    return <Outlet />;
 };
 
 export default App;
