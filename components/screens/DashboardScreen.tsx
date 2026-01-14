@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { User, Account, ViewType } from '../../types';
+import { User, ViewType } from '../../types';
 import Button from '../common/Button';
 
 interface DashboardScreenProps {

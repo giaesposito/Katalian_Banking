@@ -7,13 +7,13 @@ import Spinner from '../common/Spinner';
 import { STATES } from '../../constants';
 
 interface LoanApplicationScreenProps {
-    user: User;
+    _user: User;
     loanType: Loan['type'];
     onNavigate: () => void;
     onSubmit: (loanData: LoanApplicationData, type: Loan['type']) => void;
 }
 
-const LoanApplicationScreen: React.FC<LoanApplicationScreenProps> = ({ user, loanType, onNavigate, onSubmit }) => {
+const LoanApplicationScreen: React.FC<LoanApplicationScreenProps> = ({ _user, loanType, onNavigate, onSubmit }) => {
     const [step, setStep] = useState(1);
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState<Partial<LoanApplicationData>>({

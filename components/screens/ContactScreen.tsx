@@ -2,14 +2,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ViewType } from '../../types';
 import Button from '../common/Button';
-import Input from '../common/Input';
 
 interface ContactScreenProps {
     onNavigate: (view: ViewType) => void;
 }
 
 const ContactScreen: React.FC<ContactScreenProps> = ({ onNavigate }) => {
-    const [chatOpen, setChatOpen] = useState(false);
     const [messages, setMessages] = useState<{ role: 'ai' | 'user', text: string }[]>([
         { role: 'ai', text: 'Hello! I am your Katalian Support Assistant. How can I help you today?' }
     ]);

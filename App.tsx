@@ -1,5 +1,5 @@
 
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Routes, Route, useNavigate, Navigate, Outlet, useParams } from 'react-router-dom';
 import { User, Account, ApplicationData, ViewType, Loan, LoanApplicationData } from './types';
 import { USERS } from './constants';
@@ -36,7 +36,7 @@ const LoanApplicationWrapper: React.FC<{
     const { loanType } = useParams<{ loanType: string }>();
     const type = loanType as Loan['type'];
     if (!type) return <Navigate to="/loans" replace />;
-    return <LoanApplicationScreen user={user} loanType={type} onNavigate={() => onNavigate({ name: 'loans' })} onSubmit={onSubmit} />;
+    return <LoanApplicationScreen _user={user} loanType={type} onNavigate={() => onNavigate({ name: 'loans' })} onSubmit={onSubmit} />;
 }
 
 const App: React.FC = () => {
