@@ -38,43 +38,56 @@ const LoanApplicationScreen: React.FC<LoanApplicationScreenProps> = ({ loanType,
         switch(step) {
             case 1:
                 return (
-                    <div className="space-y-4">
-                        <h3 className="text-xl font-bold text-white mb-6">Personal Verification</h3>
-                        <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-8 animate-in fade-in duration-500">
+                        <div className="space-y-2">
+                            <h3 className="text-2xl font-black text-white tracking-tight">Personal Verification</h3>
+                            <p className="text-slate-500 text-sm font-medium">Verify your legal identity for credit assessment.</p>
+                        </div>
+                        <div className="grid grid-cols-2 gap-6">
                             <Input id="firstName" name="firstName" label="First Name" value={formData.firstName} onChange={handleChange} required />
                             <Input id="lastName" name="lastName" label="Last Name" value={formData.lastName} onChange={handleChange} required />
                         </div>
                         <Input id="dob" name="dob" label="Date of Birth" type="date" value={formData.dob} onChange={handleChange} required />
-                        <Input id="address" name="address" label="Home Address" value={formData.address} onChange={handleChange} required />
+                        <Input id="address" name="address" label="Primary Residence" value={formData.address} onChange={handleChange} required />
                     </div>
                 );
             case 2:
                 return (
-                    <div className="space-y-4">
-                        <h3 className="text-xl font-bold text-white mb-6">Financial & Employment</h3>
-                        <Input id="employer" name="employer" label="Current Employer" value={formData.employer} onChange={handleChange} required />
-                        <Input id="jobTitle" name="jobTitle" label="Job Title" value={formData.jobTitle} onChange={handleChange} required />
-                        <Input id="annualIncome" name="annualIncome" label="Gross Annual Income ($)" type="number" value={formData.annualIncome} onChange={handleChange} required />
+                    <div className="space-y-8 animate-in fade-in duration-500">
+                        <div className="space-y-2">
+                            <h3 className="text-2xl font-black text-white tracking-tight">Capital & Employment</h3>
+                            <p className="text-slate-500 text-sm font-medium">Details regarding your recurring income and professional status.</p>
+                        </div>
+                        <div className="space-y-6">
+                            <Input id="employer" name="employer" label="Current Employer" value={formData.employer} onChange={handleChange} required />
+                            <Input id="jobTitle" name="jobTitle" label="Official Job Title" value={formData.jobTitle} onChange={handleChange} required />
+                            <Input id="annualIncome" name="annualIncome" label="Gross Annual Income ($)" type="number" value={formData.annualIncome} onChange={handleChange} required />
+                        </div>
                     </div>
                 );
             case 3:
                 return (
-                    <div className="space-y-4">
-                        <h3 className="text-xl font-bold text-white mb-6">Loan Details</h3>
-                        <Input id="loanAmount" name="loanAmount" label="Requested Amount ($)" type="number" value={formData.loanAmount} onChange={handleChange} required />
-                        <div>
-                            <label className="block text-sm font-medium text-gray-400 mb-1">Term (Months)</label>
-                            <select name="loanTerm" value={formData.loanTerm} onChange={handleChange} className="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-white">
-                                <option value="12">12 Months</option>
-                                <option value="24">24 Months</option>
-                                <option value="36">36 Months</option>
-                                <option value="48">48 Months</option>
-                                <option value="60">60 Months</option>
-                            </select>
+                    <div className="space-y-8 animate-in fade-in duration-500">
+                        <div className="space-y-2">
+                            <h3 className="text-2xl font-black text-white tracking-tight">Facility Requirements</h3>
+                            <p className="text-slate-500 text-sm font-medium">Define your required capital and repayment structure.</p>
                         </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-400 mb-1">Loan Purpose</label>
-                            <textarea name="purpose" value={formData.purpose} onChange={handleChange} className="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-white h-24" placeholder="Briefly describe what the funds will be used for..." />
+                        <div className="space-y-6">
+                            <Input id="loanAmount" name="loanAmount" label="Required Capital ($)" type="number" value={formData.loanAmount} onChange={handleChange} required />
+                            <div className="space-y-2">
+                                <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-1">Proposed Term</label>
+                                <select name="loanTerm" value={formData.loanTerm} onChange={handleChange} className="w-full bg-slate-950 border border-white/5 rounded-2xl p-4 text-white text-sm font-medium focus:border-emerald-500/50 outline-none transition-all">
+                                    <option value="12">12 Months</option>
+                                    <option value="24">24 Months</option>
+                                    <option value="36">36 Months</option>
+                                    <option value="48">48 Months</option>
+                                    <option value="60">60 Months</option>
+                                </select>
+                            </div>
+                            <div className="space-y-2">
+                                <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-1">Capital Utilization Purpose</label>
+                                <textarea name="purpose" value={formData.purpose} onChange={handleChange} className="w-full bg-slate-950 border border-white/5 rounded-2xl p-4 text-white text-sm font-medium h-32 focus:border-emerald-500/50 outline-none transition-all" placeholder="Briefly describe the allocation plan for these funds..." />
+                            </div>
                         </div>
                     </div>
                 );
@@ -83,33 +96,18 @@ const LoanApplicationScreen: React.FC<LoanApplicationScreenProps> = ({ loanType,
     };
 
     return (
-        <div className="max-w-2xl mx-auto bg-gray-800 p-10 rounded-2xl shadow-2xl border border-gray-700">
-            <div className="flex justify-between items-center mb-10">
-                <div>
-                    <h2 className="text-3xl font-bold text-white">{loanType} Loan</h2>
-                    <p className="text-gray-500 text-sm">Step {step} of 3</p>
+        <div className="max-w-3xl mx-auto">
+            <div className="bg-slate-900 border border-white/5 p-10 md:p-14 rounded-[3rem] shadow-2xl relative overflow-hidden">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-1 bg-emerald-500/20">
+                    <div className="h-full bg-emerald-500 transition-all duration-500" style={{ width: `${(step / 3) * 100}%` }}></div>
                 </div>
-                <button onClick={() => onNavigate()} className="text-gray-500 hover:text-white">&times;</button>
-            </div>
 
-            <form onSubmit={handleSubmit}>
-                <div className="mb-10">{renderStep()}</div>
-                
-                <div className="flex justify-between pt-6 border-t border-gray-700">
-                    <Button type="button" variant="secondary" onClick={step === 1 ? () => onNavigate() : handleBack}>
-                        {step === 1 ? 'Cancel' : 'Back'}
-                    </Button>
-                    {step < 3 ? (
-                        <Button type="button" onClick={handleNext}>Continue</Button>
-                    ) : (
-                        <Button type="submit" disabled={loading}>
-                            {loading ? <Spinner /> : 'Submit Application'}
-                        </Button>
-                    )}
+                <div className="flex justify-between items-center mb-16">
+                    <div className="space-y-1">
+                        <h2 className="text-3xl font-black text-white tracking-tighter uppercase italic">{loanType} <span className="text-slate-500 font-normal">Facility</span></h2>
+                        <p className="text-xs font-black uppercase tracking-[0.3em] text-emerald-500">Step {step} of 3</p>
+                    </div>
+                    <button onClick={() => onNavigate()} className="p-3 bg-white/5 rounded-2xl hover:bg-white/10 transition-colors text-slate-400 hover:text-white">&times;</button>
                 </div>
-            </form>
-        </div>
-    );
-};
 
-export default LoanApplicationScreen;
+                <form onSubmit={handleSubmit} className="space-y-12">
