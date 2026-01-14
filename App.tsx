@@ -1,5 +1,5 @@
 
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Routes, Route, useNavigate, Navigate, Outlet, useParams } from 'react-router-dom';
 import { User, Account, ApplicationData, Loan, LoanApplicationData, ViewType } from './types';
 import { USERS } from './constants';
@@ -33,7 +33,9 @@ const ApplicationScreenWrapper: React.FC<{
     return <ApplicationScreen 
         user={user} 
         accountType={accountType} 
-        onNavigate={() => navigate('/dashboard')} 
+        onNavigate={(view) => {
+            if (view.name === 'dashboard') navigate('/dashboard');
+        }} 
         onSubmit={onSubmit} 
     />;
 }
@@ -46,7 +48,7 @@ const LoanApplicationWrapper: React.FC<{
     const navigate = useNavigate();
     const type = loanType ? decodeURIComponent(loanType) as Loan['type'] : undefined;
     if (!type) return <Navigate to="/loans" replace />;
-    return <LoanApplicationScreen loanType={type} onNavigate={() => navigate('/loans')} onSubmit={onSubmit} />;
+    return <LoanApplicationScreen user={user} loanType={type} onNavigate={() => navigate('/loans')} onSubmit={onSubmit} />;
 }
 
 const App: React.FC = () => {
