@@ -12,26 +12,7 @@ export const USERS: User[] = [
       { id: 'acc1-1', type: 'Checking', accountNumber: '...7890', balance: 5345.54 },
       { id: 'acc1-2', type: 'Savings', accountNumber: '...1234', balance: 104456.67 },
     ],
-  },
-  {
-    id: 'user2',
-    username: 'newuser098',
-    passwordHash: 'pass@123not',
-    locked: false,
-    canApplyForPlatinum: false,
-    accounts: [
-      { id: 'acc2-1', type: 'Checking', accountNumber: '...5678', balance: 2345.43 },
-    ],
-  },
-  {
-    id: 'user3',
-    username: 'testuser934',
-    passwordHash: 'notpassword_125',
-    locked: false,
-    canApplyForPlatinum: false,
-    accounts: [
-      { id: 'acc3-1', type: 'Savings', accountNumber: '...9012', balance: 4234.87 },
-    ],
+    loans: [],
   },
   {
     id: 'user4',
@@ -42,8 +23,8 @@ export const USERS: User[] = [
     canApplyForPlatinum: false,
     accounts: [
       { id: 'acc4-1', type: 'Checking', accountNumber: '...3456', balance: 12.14 },
-      { id: 'acc4-2', type: 'Savings', accountNumber: '...7891', balance: 1000.32 },
     ],
+    loans: [],
   },
 ];
 
@@ -55,4 +36,10 @@ export const STATES = [
     'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania',
     'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont',
     'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
+];
+
+export const LOAN_PRODUCTS = [
+    { type: 'Personal', rate: '5.99%', description: 'Flexible funds for life\'s unexpected moments.', icon: '💰' },
+    { type: 'Auto', rate: '4.25%', description: 'Get behind the wheel of your dream car faster.', icon: '🚗' },
+    { type: 'Mortgage', rate: '6.45%', description: 'Your journey to home ownership starts here.', icon: '🏠' },
 ];

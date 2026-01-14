@@ -4,7 +4,7 @@ export interface Account {
   type: 'Checking' | 'Savings' | 'Credit Card' | 'Platinum Credit Card';
   accountNumber: string;
   balance: number;
-  status?: 'Pending';
+  status?: 'Pending' | 'Active';
 }
 
 export interface User {
@@ -12,9 +12,19 @@ export interface User {
   username: string;
   passwordHash: string;
   accounts: Account[];
+  loans: Loan[];
   canApplyForPlatinum: boolean;
   locked: boolean;
   unlockPasswordHash?: string;
+}
+
+export interface Loan {
+  id: string;
+  type: 'Personal' | 'Auto' | 'Mortgage';
+  amount: number;
+  interestRate: number;
+  status: 'Pending' | 'Approved' | 'Active';
+  termMonths: number;
 }
 
 export type ViewType =
@@ -22,7 +32,11 @@ export type ViewType =
   | { name: 'resetPassword' }
   | { name: 'dashboard' }
   | { name: 'transfer' }
-  | { name: 'apply'; for: Account['type'] };
+  | { name: 'deposit' }
+  | { name: 'loans' }
+  | { name: 'contact' }
+  | { name: 'apply'; for: Account['type'] }
+  | { name: 'applyLoan'; loanType: Loan['type'] };
 
 export interface ApplicationData {
     firstName: string;
@@ -35,4 +49,13 @@ export interface ApplicationData {
     zip: string;
     initialDeposit?: number;
     depositFromAccountId?: string;
+}
+
+export interface LoanApplicationData extends ApplicationData {
+    employer: string;
+    jobTitle: string;
+    annualIncome: number;
+    loanAmount: number;
+    loanTerm: number;
+    purpose: string;
 }
