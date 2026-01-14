@@ -8,13 +8,13 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const Button: React.FC<ButtonProps> = ({ children, variant = 'primary', fullWidth = false, className, ...props }) => {
-  const baseClasses = 'font-bold py-2.5 px-6 rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-950 transition-all duration-200 ease-out transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed text-sm';
+  const baseClasses = 'relative inline-flex items-center justify-center font-bold py-2.5 px-6 rounded-2xl focus:outline-none transition-all duration-300 ease-out active:scale-[0.98] disabled:opacity-30 disabled:cursor-not-allowed text-sm overflow-hidden';
   
   const variantClasses = {
-    primary: 'bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-400 hover:to-teal-500 text-slate-950 shadow-[0_4px_14px_rgba(20,184,166,0.3)]',
-    secondary: 'bg-slate-800 hover:bg-slate-700 text-white border border-slate-700',
-    danger: 'bg-red-600 hover:bg-red-700 text-white shadow-[0_4px_14px_rgba(220,38,38,0.3)]',
-    ghost: 'bg-transparent hover:bg-slate-800 text-slate-400 hover:text-white',
+    primary: 'bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-[0_10px_20px_rgba(16,185,129,0.2)]',
+    secondary: 'bg-white/5 hover:bg-white/10 text-white border border-white/10',
+    danger: 'bg-red-600 hover:bg-red-700 text-white shadow-[0_10px_20px_rgba(220,38,38,0.2)]',
+    ghost: 'bg-transparent hover:bg-white/5 text-slate-400 hover:text-white',
   };
 
   const widthClass = fullWidth ? 'w-full' : '';

@@ -15,15 +15,18 @@ export default {
           800: '#1e293b',
           700: '#334155',
         },
-        teal: {
-          400: '#2dd4bf',
-          500: '#14b8a6',
-          600: '#0d9488',
+        emerald: {
+          400: '#34d399',
+          500: '#10b981',
+          600: '#059669',
         },
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
-        mono: ['Fira Code', 'monospace'],
+        mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+      },
+      animation: {
+        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
       },
     },
   },
