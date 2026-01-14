@@ -38,7 +38,7 @@ const DashboardScreen: React.FC<DashboardScreenProps> = ({ user, onNavigate }) =
                         </div>
                         <div className="flex gap-3">
                             <Button onClick={() => onNavigate({name:'transfer'})} variant="primary" className="!rounded-full px-8">Move Funds</Button>
-                            <Button onClick={() => onNavigate({name:'deposit'})} variant="secondary" className="!rounded-full px-8">Add Cash</Button>
+                            <Button onClick={() => onNavigate({name:'deposit'})} variant="secondary" className="!rounded-full px-8">Deposit</Button>
                         </div>
                     </div>
                 </div>
