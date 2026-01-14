@@ -1,19 +1,18 @@
 
 import React, { useState } from 'react';
-import { User, Loan, LoanApplicationData } from '../../types';
+import { Loan, LoanApplicationData } from '../../types';
 import Button from '../common/Button';
 import Input from '../common/Input';
 import Spinner from '../common/Spinner';
 import { STATES } from '../../constants';
 
 interface LoanApplicationScreenProps {
-    _user: User;
     loanType: Loan['type'];
     onNavigate: () => void;
     onSubmit: (loanData: LoanApplicationData, type: Loan['type']) => void;
 }
 
-const LoanApplicationScreen: React.FC<LoanApplicationScreenProps> = ({ _user, loanType, onNavigate, onSubmit }) => {
+const LoanApplicationScreen: React.FC<LoanApplicationScreenProps> = ({ loanType, onNavigate, onSubmit }) => {
     const [step, setStep] = useState(1);
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState<Partial<LoanApplicationData>>({

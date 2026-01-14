@@ -32,11 +32,11 @@ const LoanApplicationWrapper: React.FC<{
     user: User, 
     onSubmit: (loanData: LoanApplicationData, type: Loan['type']) => void,
     onNavigate: (view: ViewType) => void
-}> = ({ user, onSubmit, onNavigate }) => {
+}> = ({ onSubmit, onNavigate }) => {
     const { loanType } = useParams<{ loanType: string }>();
     const type = loanType as Loan['type'];
     if (!type) return <Navigate to="/loans" replace />;
-    return <LoanApplicationScreen _user={user} loanType={type} onNavigate={() => onNavigate({ name: 'loans' })} onSubmit={onSubmit} />;
+    return <LoanApplicationScreen loanType={type} onNavigate={() => onNavigate({ name: 'loans' })} onSubmit={onSubmit} />;
 }
 
 const App: React.FC = () => {

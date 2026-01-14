@@ -5,6 +5,8 @@ import { User } from '../../types';
 import Button from './Button';
 import Spinner from './Spinner';
 
+declare var process: { env: { [key: string]: string | undefined } };
+
 interface AiAssistantProps {
     allUsers: User[];
 }
@@ -23,7 +25,8 @@ const AiAssistant: React.FC<AiAssistantProps> = ({ allUsers }) => {
         setResponse(null);
 
         try {
-            const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+            // Initializing GoogleGenAI exactly as per guidelines
+            const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
             const prompt = `
                 You are a senior financial analyst and database assistant for Katalian Bank.
                 Below is the current state of the bank's user database in JSON format.
