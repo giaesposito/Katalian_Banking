@@ -14,27 +14,34 @@ const Header: React.FC<HeaderProps> = ({ user, onLogout, onNavigate }) => {
     const location = useLocation();
 
     return (
-        <header className="flex flex-col sm:flex-row justify-between items-center pb-6 border-b border-gray-800 gap-4">
+        <header className="flex flex-col sm:flex-row justify-between items-center py-6 border-b border-slate-800 gap-4">
             <Link to={user ? "/dashboard" : "/login"} className="flex items-center space-x-3 group">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-teal-400 group-hover:rotate-12 transition-transform" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10.496 2.132a1 1 0 00-1.992 0l-2 4A1 1 0 008 7.618V18a1 1 0 001 1h2a1 1 0 001-1V7.618a1 1 0 00.504-1.486l-2-4zM10 16a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
-                    <path d="M3 10a1 1 0 011-1h2a1 1 0 110 2H4a1 1 0 01-1-1zM13 10a1 1 0 011-1h2a1 1 0 110 2h-2a1 1 0 01-1-1z" />
-                </svg>
-                <h1 className="text-3xl font-black text-white tracking-tighter uppercase italic">Katalian Bank</h1>
+                <div className="bg-teal-500 p-2 rounded-xl group-hover:rotate-6 transition-transform shadow-[0_0_15px_rgba(20,184,166,0.4)]">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-slate-950" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                    </svg>
+                </div>
+                <h1 className="text-2xl font-black text-white tracking-tighter uppercase italic">Katalian</h1>
             </Link>
             {user && (
-                <div className="flex items-center space-x-2 sm:space-x-4">
+                <div className="flex items-center space-x-1 sm:space-x-4">
+                    <button 
+                        onClick={() => onNavigate({name: 'dashboard'})}
+                        className={`text-xs font-bold px-4 py-2 rounded-lg transition-all ${location.pathname === '/dashboard' ? 'bg-slate-800 text-teal-400' : 'text-slate-400 hover:text-white'}`}
+                    >
+                        Accounts
+                    </button>
                     <button 
                         onClick={() => onNavigate({name: 'contact'})}
-                        className={`text-sm font-bold px-4 py-2 rounded-full transition-all ${location.pathname === '/contact' ? 'bg-teal-500 text-white' : 'text-gray-400 hover:text-teal-400'}`}
+                        className={`text-xs font-bold px-4 py-2 rounded-lg transition-all ${location.pathname === '/contact' ? 'bg-slate-800 text-teal-400' : 'text-slate-400 hover:text-white'}`}
                     >
                         Support
                     </button>
-                    <Link to="/admin" className={`text-sm font-bold px-4 py-2 rounded-full transition-all ${location.pathname === '/admin' ? 'bg-purple-600 text-white' : 'text-gray-400 hover:text-purple-400'}`}>
+                    <Link to="/admin" className={`text-xs font-bold px-4 py-2 rounded-lg transition-all ${location.pathname === '/admin' ? 'bg-slate-800 text-purple-400' : 'text-slate-400 hover:text-purple-400'}`}>
                         Admin
                     </Link>
-                    <span className="hidden md:inline text-gray-700">|</span>
-                    <Button onClick={onLogout} variant="secondary" className="px-4 py-2 text-xs">Logout</Button>
+                    <div className="h-6 w-[1px] bg-slate-800 mx-2 hidden sm:block" />
+                    <Button onClick={onLogout} variant="secondary" className="px-4 py-2 text-[10px] uppercase tracking-widest border border-slate-700">Logout</Button>
                 </div>
             )}
         </header>
