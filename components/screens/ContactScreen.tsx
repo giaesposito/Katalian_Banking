@@ -60,8 +60,8 @@ const ContactScreen: React.FC<ContactScreenProps> = ({ onNavigate }) => {
                             </div>
                         </div>
                         <div className="flex flex-col sm:flex-row gap-4">
-                            <Button variant="danger" fullWidth className="py-4 shadow-none border border-red-500/20">Report Stolen Asset</Button>
-                            <Button variant="danger" fullWidth className="bg-red-900/20 hover:bg-red-900/40 border border-red-500/20 py-4 shadow-none">Account Lockdown</Button>
+                            <Button onClick={() => onNavigate({ name: 'security', action: 'report' })} variant="danger" fullWidth className="py-4 shadow-none border border-red-500/20">Report Stolen Asset</Button>
+                            <Button onClick={() => onNavigate({ name: 'security', action: 'lockdown' })} variant="danger" fullWidth className="bg-red-900/20 hover:bg-red-900/40 border border-red-500/20 py-4 shadow-none">Account Lockdown</Button>
                         </div>
                     </div>
                 </div>

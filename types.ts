@@ -4,7 +4,7 @@ export interface Account {
   type: 'Checking' | 'Savings' | 'Credit Card' | 'Platinum Credit Card';
   accountNumber: string;
   balance: number;
-  status?: 'Pending' | 'Active';
+  status?: 'Pending' | 'Active' | 'Frozen';
 }
 
 export interface User {
@@ -35,6 +35,7 @@ export type ViewType =
   | { name: 'deposit' }
   | { name: 'loans' }
   | { name: 'contact' }
+  | { name: 'security'; action: 'report' | 'lockdown' }
   | { name: 'apply'; for: Account['type'] }
   | { name: 'applyLoan'; loanType: Loan['type'] };
 

@@ -11,6 +11,7 @@ import ApplicationScreen from './components/screens/ApplicationScreen';
 import LoanApplicationScreen from './components/screens/LoanApplicationScreen';
 import LoansScreen from './components/screens/LoansScreen';
 import ContactScreen from './components/screens/ContactScreen';
+import SecurityScreen from './components/screens/SecurityScreen';
 import DepositScreen from './components/screens/DepositScreen';
 import AdminScreen from './components/screens/AdminScreen';
 import Header from './components/common/Header';
@@ -51,6 +52,25 @@ const LoanApplicationWrapper: React.FC<{
     return <LoanApplicationScreen user={user} loanType={type} onNavigate={() => navigate('/loans')} onSubmit={onSubmit} />;
 }
 
+const SecurityScreenWrapper: React.FC<{
+    user: User,
+    onActionComplete: (action: 'report' | 'lockdown') => void
+}> = ({ user, onActionComplete }) => {
+    const { action } = useParams<{ action: string }>();
+    const navigate = useNavigate();
+    const validAction = (action === 'report' || action === 'lockdown') ? action : 'report';
+    
+    return <SecurityScreen 
+        user={user} 
+        action={validAction} 
+        onNavigate={(view) => {
+            if (view.name === 'dashboard') navigate('/dashboard');
+            if (view.name === 'contact') navigate('/contact');
+        }}
+        onActionComplete={onActionComplete}
+    />;
+}
+
 const App: React.FC = () => {
     const [users, setUsers] = useState<User[]>(USERS);
     const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -65,6 +85,7 @@ const App: React.FC = () => {
             case 'resetPassword': navigate('/reset-password'); break;
             case 'contact': navigate('/contact'); break;
             case 'loans': navigate('/loans'); break;
+            case 'security': navigate(`/security/${view.action}`); break;
             case 'apply': navigate(`/apply/${encodeURIComponent(view.for)}`); break;
             case 'applyLoan': navigate(`/apply-loan/${encodeURIComponent(view.loanType)}`); break;
         }
@@ -85,6 +106,18 @@ const App: React.FC = () => {
         setCurrentUser(null);
         navigate('/login');
     }, [navigate]);
+
+    const handleSecurityAction = (action: 'report' | 'lockdown') => {
+        if (!currentUser) return;
+        if (action === 'lockdown') {
+            const updatedUser = { ...currentUser, locked: true };
+            setUsers(users.map(u => u.id === currentUser.id ? updatedUser : u));
+            handleLogout();
+        } else {
+            // Reporting stolen asset just returns to dashboard in this simulation
+            navigate('/dashboard');
+        }
+    };
 
     const handleApplicationSubmit = async (appData: ApplicationData, accountType: Account['type']) => {
         if (!currentUser) return;
@@ -143,6 +176,7 @@ const App: React.FC = () => {
                         <Route path="/deposit" element={currentUser && <DepositScreen user={currentUser} onNavigate={handleNavigate} onDeposit={handleDeposit} />} />
                         <Route path="/loans" element={<LoansScreen onNavigate={handleNavigate} />} />
                         <Route path="/contact" element={<ContactScreen onNavigate={handleNavigate} />} />
+                        <Route path="/security/:action" element={currentUser && <SecurityScreenWrapper user={currentUser} onActionComplete={handleSecurityAction} />} />
                         <Route path="/apply/:accountType" element={currentUser && <ApplicationScreenWrapper user={currentUser} onSubmit={handleApplicationSubmit} />} />
                         <Route path="/apply-loan/:loanType" element={currentUser && <LoanApplicationWrapper user={currentUser} onSubmit={handleLoanSubmit} />} />
                         <Route path="/admin" element={<AdminScreen />} />
