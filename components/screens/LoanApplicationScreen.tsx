@@ -31,7 +31,11 @@ const LoanApplicationScreen: React.FC<LoanApplicationScreenProps> = ({ loanType,
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
-        await onSubmit(formData as LoanApplicationData, loanType);
+        // Simulate a small delay for the "Processing" state to be visible
+        setTimeout(async () => {
+            await onSubmit(formData as LoanApplicationData, loanType);
+            setLoading(false);
+        }, 1500);
     };
 
     const renderStep = () => {
@@ -43,7 +47,7 @@ const LoanApplicationScreen: React.FC<LoanApplicationScreenProps> = ({ loanType,
                             <h3 className="text-2xl font-black text-white tracking-tight">Personal Verification</h3>
                             <p className="text-slate-500 text-sm font-medium">Verify your legal identity for credit assessment.</p>
                         </div>
-                        <div className="grid grid-cols-2 gap-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <Input id="firstName" name="firstName" label="First Name" value={formData.firstName} onChange={handleChange} required />
                             <Input id="lastName" name="lastName" label="Last Name" value={formData.lastName} onChange={handleChange} required />
                         </div>
@@ -86,7 +90,13 @@ const LoanApplicationScreen: React.FC<LoanApplicationScreenProps> = ({ loanType,
                             </div>
                             <div className="space-y-2">
                                 <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-1">Capital Utilization Purpose</label>
-                                <textarea name="purpose" value={formData.purpose} onChange={handleChange} className="w-full bg-slate-950 border border-white/5 rounded-2xl p-4 text-white text-sm font-medium h-32 focus:border-emerald-500/50 outline-none transition-all" placeholder="Briefly describe the allocation plan for these funds..." />
+                                <textarea 
+                                    name="purpose" 
+                                    value={formData.purpose} 
+                                    onChange={handleChange} 
+                                    className="w-full bg-slate-950 border border-white/5 rounded-2xl p-4 text-white text-sm font-medium h-32 focus:border-emerald-500/50 outline-none transition-all resize-none" 
+                                    placeholder="Briefly describe the allocation plan for these funds..." 
+                                />
                             </div>
                         </div>
                     </div>
@@ -96,18 +106,88 @@ const LoanApplicationScreen: React.FC<LoanApplicationScreenProps> = ({ loanType,
     };
 
     return (
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-3xl mx-auto py-8">
             <div className="bg-slate-900 border border-white/5 p-10 md:p-14 rounded-[3rem] shadow-2xl relative overflow-hidden">
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-1 bg-emerald-500/20">
-                    <div className="h-full bg-emerald-500 transition-all duration-500" style={{ width: `${(step / 3) * 100}%` }}></div>
+                <div className="absolute top-0 left-0 w-full h-1.5 bg-white/5">
+                    <div 
+                        className="h-full bg-emerald-500 transition-all duration-700 ease-in-out shadow-[0_0_10px_rgba(16,185,129,0.5)]" 
+                        style={{ width: `${(step / 3) * 100}%` }}
+                    ></div>
                 </div>
 
                 <div className="flex justify-between items-center mb-16">
                     <div className="space-y-1">
-                        <h2 className="text-3xl font-black text-white tracking-tighter uppercase italic">{loanType} <span className="text-slate-500 font-normal">Facility</span></h2>
-                        <p className="text-xs font-black uppercase tracking-[0.3em] text-emerald-500">Step {step} of 3</p>
+                        <h2 className="text-3xl font-black text-white tracking-tighter uppercase italic">
+                            {loanType} <span className="text-slate-500 font-normal">Facility</span>
+                        </h2>
+                        <p className="text-xs font-black uppercase tracking-[0.3em] text-emerald-500">
+                            {loading ? 'Submitting Application' : `Step ${step} of 3`}
+                        </p>
                     </div>
-                    <button onClick={() => onNavigate()} className="p-3 bg-white/5 rounded-2xl hover:bg-white/10 transition-colors text-slate-400 hover:text-white">&times;</button>
+                    {!loading && (
+                        <button 
+                            onClick={() => onNavigate()} 
+                            className="p-3 bg-white/5 rounded-2xl hover:bg-white/10 transition-colors text-slate-400 hover:text-white"
+                            aria-label="Cancel application"
+                        >
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    )}
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-12">
+                {loading ? (
+                    <div className="py-20 flex flex-col items-center justify-center space-y-8 animate-in fade-in duration-500">
+                        <Spinner />
+                        <div className="text-center space-y-2">
+                            <h4 className="text-xl font-black text-white uppercase tracking-widest">Processing Credentials</h4>
+                            <p className="text-slate-500 text-sm font-medium">Communicating with the credit risk engine...</p>
+                        </div>
+                    </div>
+                ) : (
+                    <form onSubmit={handleSubmit} className="space-y-12">
+                        <div className="min-h-[300px]">
+                            {renderStep()}
+                        </div>
+                        
+                        <div className="flex justify-between items-center pt-8 border-t border-white/5">
+                            <div>
+                                {step > 1 && (
+                                    <Button 
+                                        type="button" 
+                                        variant="secondary" 
+                                        onClick={handleBack} 
+                                        className="!rounded-full px-8"
+                                    >
+                                        Back
+                                    </Button>
+                                )}
+                            </div>
+                            <div className="flex gap-4">
+                                {step < 3 ? (
+                                    <Button 
+                                        type="button" 
+                                        onClick={handleNext} 
+                                        className="!rounded-full px-10"
+                                    >
+                                        Continue
+                                    </Button>
+                                ) : (
+                                    <Button 
+                                        type="submit" 
+                                        className="!rounded-full px-10"
+                                    >
+                                        Submit Application
+                                    </Button>
+                                )}
+                            </div>
+                        </div>
+                    </form>
+                )}
+            </div>
+        </div>
+    );
+};
+
+export default LoanApplicationScreen;
