@@ -1,10 +1,20 @@
 
+export interface Transaction {
+  id: string;
+  date: string;
+  description: string;
+  amount: number;
+  type: 'Credit' | 'Debit';
+  category: string;
+}
+
 export interface Account {
   id: string;
   type: 'Checking' | 'Savings' | 'Credit Card' | 'Platinum Credit Card';
   accountNumber: string;
   balance: number;
   status?: 'Pending' | 'Active' | 'Frozen';
+  transactions: Transaction[];
 }
 
 export interface User {
@@ -36,6 +46,7 @@ export type ViewType =
   | { name: 'loans' }
   | { name: 'contact' }
   | { name: 'security'; action: 'report' | 'lockdown' }
+  | { name: 'accountDetails'; accountId: string }
   | { name: 'apply'; for: Account['type'] }
   | { name: 'applyLoan'; loanType: Loan['type'] };
 

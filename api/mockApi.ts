@@ -12,12 +12,14 @@ export const mockApi = {
 
     async submitApplication(_userId: string, appData: ApplicationData, accountType: Account['type']): Promise<Account> {
         await delay(1500);
+        // Fix: Added missing transactions property to comply with Account interface in types.ts
         return {
             id: `acc-${Math.random().toString(36).substr(2, 9)}`,
             type: accountType,
             accountNumber: `...${Math.floor(1000 + Math.random() * 9000)}`,
             balance: appData.initialDeposit || 0,
             status: accountType.includes('Card') ? 'Pending' : 'Active',
+            transactions: [],
         };
     },
 

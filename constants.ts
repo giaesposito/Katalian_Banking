@@ -1,5 +1,23 @@
 
-import { User } from './types';
+import { User, Transaction } from './types';
+
+const generateMockTransactions = (count: number, baseDescription: string): Transaction[] => {
+  return Array.from({ length: count }).map((_, i) => {
+    const isCredit = Math.random() > 0.6;
+    const date = new Date();
+    date.setMonth(date.getMonth() - Math.floor(Math.random() * 4));
+    date.setDate(Math.floor(Math.random() * 28) + 1);
+    
+    return {
+      id: `tx-${Math.random().toString(36).substr(2, 9)}`,
+      date: date.toISOString(),
+      description: `${baseDescription} ${i + 1}`,
+      amount: parseFloat((Math.random() * 500 + 10).toFixed(2)),
+      type: isCredit ? 'Credit' : 'Debit',
+      category: isCredit ? 'Income' : 'General',
+    };
+  });
+};
 
 export const USERS: User[] = [
   {
@@ -9,8 +27,28 @@ export const USERS: User[] = [
     locked: false,
     canApplyForPlatinum: true,
     accounts: [
-      { id: 'acc1-1', type: 'Checking', accountNumber: '...7890', balance: 5345.54 },
-      { id: 'acc1-2', type: 'Savings', accountNumber: '...1234', balance: 104456.67 },
+      { 
+        id: 'acc1-1', 
+        type: 'Checking', 
+        accountNumber: '...7890', 
+        balance: 5345.54,
+        transactions: [
+          { id: 'tx1', date: '2025-05-10T10:00:00Z', description: 'Apple Store Cupertino', amount: 1299.00, type: 'Debit', category: 'Technology' },
+          { id: 'tx2', date: '2025-05-08T14:30:00Z', description: 'Katalian Payroll Deposit', amount: 4500.00, type: 'Credit', category: 'Salary' },
+          { id: 'tx3', date: '2025-04-25T12:00:00Z', description: 'Whole Foods Market', amount: 156.43, type: 'Debit', category: 'Groceries' },
+          ...generateMockTransactions(12, 'Point of Sale')
+        ]
+      },
+      { 
+        id: 'acc1-2', 
+        type: 'Savings', 
+        accountNumber: '...1234', 
+        balance: 104456.67,
+        transactions: [
+          { id: 'tx4', date: '2025-05-01T00:00:00Z', description: 'Interest Credit', amount: 456.67, type: 'Credit', category: 'Interest' },
+          ...generateMockTransactions(5, 'Internal Transfer')
+        ]
+      },
     ],
     loans: [],
   },
@@ -22,7 +60,13 @@ export const USERS: User[] = [
     locked: true,
     canApplyForPlatinum: false,
     accounts: [
-      { id: 'acc4-1', type: 'Checking', accountNumber: '...3456', balance: 12.14 },
+      { 
+        id: 'acc4-1', 
+        type: 'Checking', 
+        accountNumber: '...3456', 
+        balance: 12.14,
+        transactions: generateMockTransactions(3, 'Emergency Withdrawal')
+      },
     ],
     loans: [],
   },

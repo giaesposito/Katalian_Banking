@@ -13,6 +13,7 @@ import LoansScreen from './components/screens/LoansScreen';
 import ContactScreen from './components/screens/ContactScreen';
 import SecurityScreen from './components/screens/SecurityScreen';
 import DepositScreen from './components/screens/DepositScreen';
+import AccountDetailsScreen from './components/screens/AccountDetailsScreen';
 import AdminScreen from './components/screens/AdminScreen';
 import Header from './components/common/Header';
 import AiAssistant from './components/common/AiAssistant';
@@ -71,6 +72,21 @@ const SecurityScreenWrapper: React.FC<{
     />;
 }
 
+const AccountDetailsWrapper: React.FC<{ user: User }> = ({ user }) => {
+    const { accountId } = useParams<{ accountId: string }>();
+    const navigate = useNavigate();
+    const account = user.accounts.find(a => a.id === accountId);
+    if (!account) return <Navigate to="/dashboard" replace />;
+
+    return <AccountDetailsScreen 
+        user={user} 
+        account={account} 
+        onNavigate={(view) => {
+            if (view.name === 'dashboard') navigate('/dashboard');
+        }} 
+    />;
+}
+
 const App: React.FC = () => {
     const [users, setUsers] = useState<User[]>(USERS);
     const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -85,6 +101,7 @@ const App: React.FC = () => {
             case 'resetPassword': navigate('/reset-password'); break;
             case 'contact': navigate('/contact'); break;
             case 'loans': navigate('/loans'); break;
+            case 'accountDetails': navigate(`/account/${view.accountId}`); break;
             case 'security': navigate(`/security/${view.action}`); break;
             case 'apply': navigate(`/apply/${encodeURIComponent(view.for)}`); break;
             case 'applyLoan': navigate(`/apply-loan/${encodeURIComponent(view.loanType)}`); break;
@@ -114,7 +131,6 @@ const App: React.FC = () => {
             setUsers(users.map(u => u.id === currentUser.id ? updatedUser : u));
             handleLogout();
         } else {
-            // Reporting stolen asset just returns to dashboard in this simulation
             navigate('/dashboard');
         }
     };
@@ -172,6 +188,7 @@ const App: React.FC = () => {
                     
                     <Route element={<ProtectedRoute user={currentUser} />}>
                         <Route path="/dashboard" element={currentUser && <DashboardScreen user={currentUser} onNavigate={handleNavigate} />} />
+                        <Route path="/account/:accountId" element={currentUser && <AccountDetailsWrapper user={currentUser} />} />
                         <Route path="/transfer" element={currentUser && <TransferScreen user={currentUser} onTransfer={handleTransfer} onNavigate={handleNavigate} />} />
                         <Route path="/deposit" element={currentUser && <DepositScreen user={currentUser} onNavigate={handleNavigate} onDeposit={handleDeposit} />} />
                         <Route path="/loans" element={<LoansScreen onNavigate={handleNavigate} />} />
