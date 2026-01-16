@@ -6,9 +6,9 @@ import Spinner from '../common/Spinner';
 
 interface SecurityScreenProps {
     user: User;
-    action: 'report' | 'lockdown';
+    action: 'report' | 'lockdown' | 'freeze-all';
     onNavigate: (view: ViewType) => void;
-    onActionComplete: (action: 'report' | 'lockdown') => void;
+    onActionComplete: (action: 'report' | 'lockdown' | 'freeze-all') => void;
 }
 
 const SecurityScreen: React.FC<SecurityScreenProps> = ({ user, action, onNavigate, onActionComplete }) => {
@@ -105,6 +105,54 @@ const SecurityScreen: React.FC<SecurityScreenProps> = ({ user, action, onNavigat
         }
     };
 
+    const renderFreezeFlow = () => {
+        const affectedAccounts = user.accounts.filter(a => a.type.includes('Card') || a.type === 'Checking');
+        switch(step) {
+            case 1:
+                return (
+                    <div className="space-y-8 animate-in fade-in duration-500">
+                        <div className="bg-cyan-500/5 border border-cyan-500/20 p-8 rounded-[2rem] space-y-6">
+                            <div className="flex items-center gap-4 text-cyan-400">
+                                <span className="text-4xl">❄️</span>
+                                <h3 className="text-2xl font-black tracking-tight uppercase italic">Cryo-Freeze Cards</h3>
+                            </div>
+                            <p className="text-slate-300 text-sm font-medium leading-relaxed">
+                                This will temporarily suspend all active cards and digital payment facilities. External ACH and Savings transfers will remain functional.
+                            </p>
+                            <div className="space-y-2">
+                                <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Affected Facilities:</p>
+                                <div className="flex flex-wrap gap-2">
+                                    {affectedAccounts.map(a => (
+                                        <span key={a.id} className="px-3 py-1 bg-white/5 rounded-full text-[10px] font-bold text-slate-400 border border-white/5">{a.type}</span>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex flex-col gap-4">
+                            <Button onClick={handleConfirm} className="bg-cyan-600 hover:bg-cyan-500 text-white py-5 !rounded-full text-lg font-black uppercase tracking-tight">Authorize Cryo-Freeze</Button>
+                            <Button onClick={() => onNavigate({name: 'dashboard'})} variant="ghost" className="text-slate-500">Cancel Protocol</Button>
+                        </div>
+                    </div>
+                );
+            case 3:
+                return (
+                    <div className="text-center space-y-10 py-16 animate-in fade-in zoom-in-95 duration-700">
+                        <div className="w-24 h-24 bg-cyan-500/10 border border-cyan-500/20 rounded-full flex items-center justify-center mx-auto shadow-[0_0_50px_rgba(6,182,212,0.15)]">
+                            <span className="text-4xl">❄️</span>
+                        </div>
+                        <div className="space-y-4">
+                            <h3 className="text-4xl font-black text-white tracking-tighter italic">Facilities Suspended</h3>
+                            <p className="text-slate-400 max-w-sm mx-auto font-medium">
+                                All identified cards have been moved to deep-freeze status. You can reactivate them individually from the account details ledger.
+                            </p>
+                        </div>
+                        <Button onClick={handleFinalize} className="bg-cyan-600 text-white px-12 py-4 !rounded-full">Back to Portfolio</Button>
+                    </div>
+                );
+            default: return null;
+        }
+    };
+
     const renderLockdownFlow = () => {
         switch(step) {
             case 1:
@@ -166,7 +214,6 @@ const SecurityScreen: React.FC<SecurityScreenProps> = ({ user, action, onNavigat
         }
     };
 
-    // Effect for lockdown logout
     React.useEffect(() => {
         if (action === 'lockdown' && step === 3) {
             const timer = setTimeout(() => {
@@ -176,12 +223,14 @@ const SecurityScreen: React.FC<SecurityScreenProps> = ({ user, action, onNavigat
         }
     }, [step, action]);
 
+    const protocolColor = action === 'freeze-all' ? 'cyan' : 'red';
+
     return (
         <div className="max-w-2xl mx-auto py-8">
             <div className={`bg-slate-900 border border-white/5 p-10 md:p-14 rounded-[3rem] shadow-2xl relative overflow-hidden ${action === 'lockdown' && step >= 2 ? 'ring-4 ring-red-600/20' : ''}`}>
                 <div className="absolute top-0 left-0 w-full h-1.5 bg-white/5">
                     <div 
-                        className={`h-full transition-all duration-700 ease-in-out ${action === 'lockdown' ? 'bg-red-600 shadow-[0_0_15px_rgba(239,68,68,0.5)]' : 'bg-red-500'}`} 
+                        className={`h-full transition-all duration-700 ease-in-out ${action === 'lockdown' ? 'bg-red-600 shadow-[0_0_15px_rgba(239,68,68,0.5)]' : action === 'freeze-all' ? 'bg-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.5)]' : 'bg-red-500'}`} 
                         style={{ width: `${(step / 3) * 100}%` }}
                     ></div>
                 </div>
@@ -191,8 +240,8 @@ const SecurityScreen: React.FC<SecurityScreenProps> = ({ user, action, onNavigat
                         <h2 className="text-3xl font-black text-white tracking-tighter uppercase italic">
                             Security <span className="text-slate-500 font-normal">Protocol</span>
                         </h2>
-                        <p className={`text-xs font-black uppercase tracking-[0.3em] ${action === 'lockdown' ? 'text-red-600' : 'text-red-500'}`}>
-                            {loading ? 'Establishing Block' : step === 3 ? 'Operation Complete' : action === 'lockdown' ? 'Critical Action Needed' : 'Incident Management'}
+                        <p className={`text-xs font-black uppercase tracking-[0.3em] ${action === 'lockdown' ? 'text-red-600' : action === 'freeze-all' ? 'text-cyan-400' : 'text-red-500'}`}>
+                            {loading ? 'Establishing Block' : step === 3 ? 'Operation Complete' : action === 'lockdown' ? 'Critical Action Needed' : action === 'freeze-all' ? 'Cryo-Freeze Protocol' : 'Incident Management'}
                         </p>
                     </div>
                     {step < 3 && !loading && (
@@ -211,15 +260,15 @@ const SecurityScreen: React.FC<SecurityScreenProps> = ({ user, action, onNavigat
                     <div className="py-24 flex flex-col items-center justify-center space-y-8 animate-in fade-in duration-500 text-center">
                         <Spinner />
                         <div className="space-y-2">
-                            <h4 className={`text-xl font-black uppercase tracking-widest ${action === 'lockdown' ? 'text-red-600' : 'text-red-500'}`}>
-                                {action === 'lockdown' ? 'Terminating All Sessions' : 'Provisioning Asset Block'}
+                            <h4 className={`text-xl font-black uppercase tracking-widest ${action === 'lockdown' ? 'text-red-600' : action === 'freeze-all' ? 'text-cyan-400' : 'text-red-500'}`}>
+                                {action === 'lockdown' ? 'Terminating All Sessions' : action === 'freeze-all' ? 'Deep-Freezing Card Facilities' : 'Provisioning Asset Block'}
                             </h4>
                             <p className="text-slate-500 text-sm font-medium">Validating security signatures and notifying central bank...</p>
                         </div>
                     </div>
                 ) : (
                     <div className="min-h-[350px] flex flex-col justify-center">
-                        {action === 'report' ? renderReportFlow() : renderLockdownFlow()}
+                        {action === 'report' ? renderReportFlow() : action === 'freeze-all' ? renderFreezeFlow() : renderLockdownFlow()}
                     </div>
                 )}
             </div>

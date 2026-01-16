@@ -55,11 +55,11 @@ const LoanApplicationWrapper: React.FC<{
 
 const SecurityScreenWrapper: React.FC<{
     user: User,
-    onActionComplete: (action: 'report' | 'lockdown') => void
+    onActionComplete: (action: 'report' | 'lockdown' | 'freeze-all') => void
 }> = ({ user, onActionComplete }) => {
     const { action } = useParams<{ action: string }>();
     const navigate = useNavigate();
-    const validAction = (action === 'report' || action === 'lockdown') ? action : 'report';
+    const validAction = (action === 'report' || action === 'lockdown' || action === 'freeze-all') ? action : 'report';
     
     return <SecurityScreen 
         user={user} 
@@ -123,12 +123,21 @@ const App: React.FC = () => {
         navigate('/login');
     }, [navigate]);
 
-    const handleSecurityAction = (action: 'report' | 'lockdown') => {
+    const handleSecurityAction = (action: 'report' | 'lockdown' | 'freeze-all') => {
         if (!currentUser) return;
+        
         if (action === 'lockdown') {
             const updatedUser = { ...currentUser, locked: true };
             setUsers(users.map(u => u.id === currentUser.id ? updatedUser : u));
             handleLogout();
+        } else if (action === 'freeze-all') {
+            const updatedAccounts = currentUser.accounts.map(acc => 
+                (acc.type.includes('Card') || acc.type === 'Checking') ? { ...acc, status: 'Frozen' as const } : acc
+            );
+            const updatedUser = { ...currentUser, accounts: updatedAccounts };
+            setCurrentUser(updatedUser);
+            setUsers(users.map(u => u.id === currentUser.id ? updatedUser : u));
+            navigate('/dashboard');
         } else {
             navigate('/dashboard');
         }
@@ -166,7 +175,6 @@ const App: React.FC = () => {
                 return { ...acc, balance: acc.balance - amount };
             }
             if (acc.id === toAccountId) {
-                // If it's a credit card, a "transfer" to it is a payment (reduces debt)
                 const isCreditCard = acc.type.includes('Credit Card');
                 return { 
                     ...acc, 

@@ -52,27 +52,41 @@ const DashboardScreen: React.FC<DashboardScreenProps> = ({ user, onNavigate }) =
                         <span className="w-12 h-[1px] bg-slate-800"></span>
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {user.accounts.map(acc => (
-                            <div 
-                                key={acc.id} 
-                                onClick={() => onNavigate({name: 'accountDetails', accountId: acc.id})}
-                                className="group bg-slate-900/50 border border-white/5 rounded-3xl p-7 hover:bg-slate-900 hover:border-emerald-500/30 transition-all cursor-pointer shadow-lg active:scale-[0.98]"
-                            >
-                                <div className="flex justify-between items-start mb-10">
-                                    <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">
-                                        {acc.type === 'Checking' ? '💳' : acc.type === 'Savings' ? '💰' : acc.type === 'Credit Card' ? '💳' : '💎'}
+                        {user.accounts.map(acc => {
+                            const isFrozen = acc.status === 'Frozen';
+                            return (
+                                <div 
+                                    key={acc.id} 
+                                    onClick={() => !isFrozen && onNavigate({name: 'accountDetails', accountId: acc.id})}
+                                    className={`group border rounded-3xl p-7 transition-all shadow-lg relative overflow-hidden ${
+                                        isFrozen 
+                                        ? 'bg-slate-950 border-red-500/20 cursor-not-allowed opacity-75' 
+                                        : 'bg-slate-900/50 border-white/5 hover:bg-slate-900 hover:border-emerald-500/30 cursor-pointer active:scale-[0.98]'
+                                    }`}
+                                >
+                                    {isFrozen && (
+                                        <div className="absolute inset-0 bg-red-500/5 backdrop-blur-[2px] flex items-center justify-center z-10">
+                                            <span className="bg-red-600 text-white text-[10px] font-black uppercase tracking-widest px-4 py-1.5 rounded-full shadow-lg">Frozen</span>
+                                        </div>
+                                    )}
+                                    <div className="flex justify-between items-start mb-10">
+                                        <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">
+                                            {acc.type === 'Checking' ? '💳' : acc.type === 'Savings' ? '💰' : acc.type === 'Credit Card' ? '💳' : '💎'}
+                                        </div>
+                                        <span className="font-mono text-[10px] text-slate-500 tracking-widest">{acc.accountNumber}</span>
                                     </div>
-                                    <span className="font-mono text-[10px] text-slate-500 tracking-widest">{acc.accountNumber}</span>
-                                </div>
-                                <div className="flex justify-between items-end">
-                                    <div>
-                                        <p className="text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1">{acc.type}</p>
-                                        <p className="text-3xl font-black text-white tabular-nums">${acc.balance.toLocaleString(undefined, {minimumFractionDigits:2})}</p>
+                                    <div className="flex justify-between items-end">
+                                        <div>
+                                            <p className="text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1">{acc.type}</p>
+                                            <p className="text-3xl font-black text-white tabular-nums">${acc.balance.toLocaleString(undefined, {minimumFractionDigits:2})}</p>
+                                        </div>
+                                        {!isFrozen && (
+                                            <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity mb-1">View Ledger →</span>
+                                        )}
                                     </div>
-                                    <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity mb-1">View Ledger →</span>
                                 </div>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
 
                     <div className="space-y-6">
@@ -104,7 +118,11 @@ const DashboardScreen: React.FC<DashboardScreenProps> = ({ user, onNavigate }) =
                         <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-8">Asset Management</h4>
                         <div className="space-y-4">
                            <QuickLink label="Request Lending" icon="🏛️" onClick={() => onNavigate({name: 'loans'})} />
-                           <QuickLink label="Freeze All Cards" icon="❄️" />
+                           <QuickLink 
+                                label="Freeze All Cards" 
+                                icon="❄️" 
+                                onClick={() => onNavigate({name: 'security', action: 'freeze-all'})} 
+                           />
                            <QuickLink label="Fraud Reporting" icon="🛡️" onClick={() => onNavigate({name: 'contact'})} />
                            <QuickLink label="Help Center" icon="📞" onClick={() => onNavigate({name:'contact'})} />
                         </div>

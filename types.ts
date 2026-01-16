@@ -45,7 +45,7 @@ export type ViewType =
   | { name: 'deposit' }
   | { name: 'loans' }
   | { name: 'contact' }
-  | { name: 'security'; action: 'report' | 'lockdown' }
+  | { name: 'security'; action: 'report' | 'lockdown' | 'freeze-all' }
   | { name: 'accountDetails'; accountId: string }
   | { name: 'apply'; for: Account['type'] }
   | { name: 'applyLoan'; loanType: Loan['type'] };
