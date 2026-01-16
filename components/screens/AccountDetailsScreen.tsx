@@ -2,6 +2,7 @@
 import React, { useState, useMemo } from 'react';
 import { ViewType, Account } from '../../types';
 import Button from '../common/Button';
+import { jsPDF } from 'jspdf';
 
 interface AccountDetailsScreenProps {
     account: Account;
@@ -23,8 +24,9 @@ const AccountDetailsScreen: React.FC<AccountDetailsScreenProps> = ({ account, on
     }, [account.transactions]);
 
     const filteredTransactions = useMemo(() => {
-        if (selectedMonth === 'All') return account.transactions;
-        return account.transactions.filter(tx => {
+        const sorted = [...account.transactions].sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        if (selectedMonth === 'All') return sorted;
+        return sorted.filter(tx => {
             const date = new Date(tx.date);
             const monthName = date.toLocaleString('default', { month: 'long', year: 'numeric' });
             return monthName === selectedMonth;
@@ -33,11 +35,97 @@ const AccountDetailsScreen: React.FC<AccountDetailsScreenProps> = ({ account, on
 
     const handleDownloadStatement = () => {
         setDownloading(true);
-        // Simulated provisioning of financial statement
+
         setTimeout(() => {
-            setDownloading(false);
-            alert(`Financial statement for ${selectedMonth === 'All' ? 'Latest Period' : selectedMonth} has been generated and pushed to your secure storage.`);
-        }, 2000);
+            try {
+                const doc = new jsPDF();
+                const pageWidth = doc.internal.pageSize.getWidth();
+                
+                // Header
+                doc.setFontSize(22);
+                doc.setTextColor(16, 185, 129); // emerald-500
+                doc.text('KATALIAN BANK', 20, 30);
+                
+                doc.setFontSize(10);
+                doc.setTextColor(100);
+                doc.text('PRIVATE WEALTH MANAGEMENT FACILITY', 20, 37);
+                
+                // Account Info
+                doc.setDrawColor(230);
+                doc.line(20, 45, pageWidth - 20, 45);
+                
+                doc.setFontSize(12);
+                doc.setTextColor(0);
+                doc.setFont('helvetica', 'bold');
+                doc.text(`${account.type} Statement`, 20, 55);
+                
+                doc.setFont('helvetica', 'normal');
+                doc.setFontSize(10);
+                doc.text(`Account Number: ${account.accountNumber}`, 20, 62);
+                doc.text(`Period: ${selectedMonth === 'All' ? 'Complete History' : selectedMonth}`, 20, 69);
+                doc.text(`Available Balance: $${account.balance.toLocaleString(undefined, {minimumFractionDigits: 2})}`, pageWidth - 20, 62, { align: 'right' });
+                doc.text(`Date of Issue: ${new Date().toLocaleDateString()}`, pageWidth - 20, 69, { align: 'right' });
+
+                // Table Header
+                let y = 85;
+                doc.setFillColor(245, 245, 245);
+                doc.rect(20, y - 5, pageWidth - 40, 8, 'F');
+                doc.setFont('helvetica', 'bold');
+                doc.text('DATE', 25, y);
+                doc.text('DESCRIPTION', 55, y);
+                doc.text('CATEGORY', 120, y);
+                doc.text('AMOUNT', pageWidth - 25, y, { align: 'right' });
+                
+                // Transactions
+                doc.setFont('helvetica', 'normal');
+                y += 10;
+                
+                filteredTransactions.forEach((tx, index) => {
+                    // Page break logic
+                    if (y > 270) {
+                        doc.addPage();
+                        y = 30;
+                    }
+
+                    const dateStr = new Date(tx.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+                    doc.text(dateStr, 25, y);
+                    
+                    // Truncate description if too long
+                    const desc = tx.description.length > 30 ? tx.description.substring(0, 27) + '...' : tx.description;
+                    doc.text(desc.toUpperCase(), 55, y);
+                    
+                    doc.text(tx.category.toUpperCase(), 120, y);
+                    
+                    const amountStr = `${tx.type === 'Credit' ? '+' : '-'}$${tx.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
+                    if (tx.type === 'Credit') doc.setTextColor(16, 185, 129);
+                    else doc.setTextColor(0);
+                    
+                    doc.text(amountStr, pageWidth - 25, y, { align: 'right' });
+                    doc.setTextColor(0);
+                    
+                    y += 8;
+                    
+                    // Row underline
+                    doc.setDrawColor(245);
+                    doc.line(20, y - 4, pageWidth - 20, y - 4);
+                });
+
+                // Footer
+                doc.setFontSize(8);
+                doc.setTextColor(150);
+                doc.text('This is an electronically generated document. Securely stored and encrypted at Katalian Global HQ.', pageWidth / 2, 285, { align: 'center' });
+
+                // Save PDF
+                const fileName = `Katalian_Statement_${account.type}_${selectedMonth.replace(' ', '_')}.pdf`;
+                doc.save(fileName);
+                
+                setDownloading(false);
+            } catch (err) {
+                console.error('PDF Generation Failed:', err);
+                alert('A technical error occurred while provisioning your statement. Please try again.');
+                setDownloading(false);
+            }
+        }, 1800);
     };
 
     return (
@@ -113,7 +201,7 @@ const AccountDetailsScreen: React.FC<AccountDetailsScreenProps> = ({ account, on
                                 <td colSpan={4} className="px-8 py-20 text-center text-slate-500 font-bold">No ledger entries detected for this period.</td>
                             </tr>
                         ) : (
-                            filteredTransactions.sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map(tx => (
+                            filteredTransactions.map(tx => (
                                 <tr key={tx.id} className="group hover:bg-white/5 transition-colors cursor-default">
                                     <td className="px-8 py-6">
                                         <p className="text-xs font-bold text-white uppercase tracking-tighter">
