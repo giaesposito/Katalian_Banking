@@ -80,7 +80,7 @@ const AccountDetailsScreen: React.FC<AccountDetailsScreenProps> = ({ account, on
                 doc.setFont('helvetica', 'normal');
                 y += 10;
                 
-                filteredTransactions.forEach((tx, index) => {
+                filteredTransactions.forEach((tx) => {
                     // Page break logic
                     if (y > 270) {
                         doc.addPage();
