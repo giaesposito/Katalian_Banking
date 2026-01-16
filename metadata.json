@@ -1,5 +1,7 @@
 {
-  "name": "Copy of Copy of Katalian Bank",
+  "name": "Katalian Bank",
   "description": "A simulated multi-page banking application for testing purposes, featuring user accounts, new account applications, and balance transfers.",
-  "requestFramePermissions": []
+  "requestFramePermissions": [
+    "camera"
+  ]
 }
