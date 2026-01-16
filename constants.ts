@@ -49,6 +49,16 @@ export const USERS: User[] = [
           ...generateMockTransactions(5, 'Internal Transfer')
         ]
       },
+      { 
+        id: 'acc1-3', 
+        type: 'Credit Card', 
+        accountNumber: '...9921', 
+        balance: 1250.00, // Debt
+        transactions: [
+          { id: 'tx5', date: '2025-05-12T10:00:00Z', description: 'Gas Station X', amount: 55.00, type: 'Debit', category: 'Transport' },
+          ...generateMockTransactions(8, 'Merchant Purchase')
+        ]
+      },
     ],
     loans: [],
   },

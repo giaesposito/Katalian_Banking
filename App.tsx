@@ -155,11 +155,27 @@ const App: React.FC = () => {
     const handleTransfer = async (fromAccountId: string, toAccountId: string, amount: number) => {
         if (!currentUser) return;
         await mockApi.executeTransfer(fromAccountId, toAccountId, amount);
+        
+        const fromAcc = currentUser.accounts.find(a => a.id === fromAccountId);
+        const toAcc = currentUser.accounts.find(a => a.id === toAccountId);
+        
+        if (!fromAcc || !toAcc) return;
+
         const updatedAccounts = currentUser.accounts.map(acc => {
-            if (acc.id === fromAccountId) return { ...acc, balance: acc.balance - amount };
-            if (acc.id === toAccountId) return { ...acc, balance: acc.balance + amount };
+            if (acc.id === fromAccountId) {
+                return { ...acc, balance: acc.balance - amount };
+            }
+            if (acc.id === toAccountId) {
+                // If it's a credit card, a "transfer" to it is a payment (reduces debt)
+                const isCreditCard = acc.type.includes('Credit Card');
+                return { 
+                    ...acc, 
+                    balance: isCreditCard ? acc.balance - amount : acc.balance + amount 
+                };
+            }
             return acc;
         });
+
         const updatedUser = { ...currentUser, accounts: updatedAccounts };
         setCurrentUser(updatedUser);
         setUsers(users.map(u => u.id === currentUser.id ? updatedUser : u));
