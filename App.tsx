@@ -79,7 +79,6 @@ const AccountDetailsWrapper: React.FC<{ user: User }> = ({ user }) => {
     if (!account) return <Navigate to="/dashboard" replace />;
 
     return <AccountDetailsScreen 
-        user={user} 
         account={account} 
         onNavigate={(view) => {
             if (view.name === 'dashboard') navigate('/dashboard');

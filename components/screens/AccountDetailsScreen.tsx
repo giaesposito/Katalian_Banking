@@ -1,11 +1,9 @@
 
 import React, { useState, useMemo } from 'react';
-import { User, ViewType, Account } from '../../types';
+import { ViewType, Account } from '../../types';
 import Button from '../common/Button';
-import Spinner from '../common/Spinner';
 
 interface AccountDetailsScreenProps {
-    user: User;
     account: Account;
     onNavigate: (view: ViewType) => void;
 }
