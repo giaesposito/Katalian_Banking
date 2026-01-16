@@ -223,8 +223,6 @@ const SecurityScreen: React.FC<SecurityScreenProps> = ({ user, action, onNavigat
         }
     }, [step, action]);
 
-    const protocolColor = action === 'freeze-all' ? 'cyan' : 'red';
-
     return (
         <div className="max-w-2xl mx-auto py-8">
             <div className={`bg-slate-900 border border-white/5 p-10 md:p-14 rounded-[3rem] shadow-2xl relative overflow-hidden ${action === 'lockdown' && step >= 2 ? 'ring-4 ring-red-600/20' : ''}`}>
