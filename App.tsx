@@ -1,5 +1,5 @@
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Routes, Route, useNavigate, Navigate, Outlet, useParams } from 'react-router-dom';
 import { User, Account, ApplicationData, Loan, LoanApplicationData, ViewType } from './types';
 import { USERS } from './constants';
@@ -18,6 +18,11 @@ import AdminScreen from './components/screens/AdminScreen';
 import Header from './components/common/Header';
 import AiAssistant from './components/common/AiAssistant';
 import { mockApi } from './api/mockApi';
+
+const STORAGE_KEYS = {
+    USERS: 'katalian_users_v1',
+    SESSION: 'katalian_session_v1'
+};
 
 const ApplicationScreenWrapper: React.FC<{
     user: User, 
@@ -87,9 +92,31 @@ const AccountDetailsWrapper: React.FC<{ user: User }> = ({ user }) => {
 }
 
 const App: React.FC = () => {
-    const [users, setUsers] = useState<User[]>(USERS);
-    const [currentUser, setCurrentUser] = useState<User | null>(null);
+    // Initialize state from localStorage
+    const [users, setUsers] = useState<User[]>(() => {
+        const saved = localStorage.getItem(STORAGE_KEYS.USERS);
+        return saved ? JSON.parse(saved) : USERS;
+    });
+    const [currentUser, setCurrentUser] = useState<User | null>(() => {
+        const saved = localStorage.getItem(STORAGE_KEYS.SESSION);
+        return saved ? JSON.parse(saved) : null;
+    });
+    
     const navigate = useNavigate();
+
+    // Persist users list on change
+    useEffect(() => {
+        localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
+    }, [users]);
+
+    // Persist session on change
+    useEffect(() => {
+        if (currentUser) {
+            localStorage.setItem(STORAGE_KEYS.SESSION, JSON.stringify(currentUser));
+        } else {
+            localStorage.removeItem(STORAGE_KEYS.SESSION);
+        }
+    }, [currentUser]);
 
     const handleNavigate = useCallback((view: ViewType) => {
         switch (view.name) {
