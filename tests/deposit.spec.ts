@@ -2,11 +2,12 @@
  * KB-34 – Deposit Facility: Multi-Method Fund Provisioning
  * Covers all 14 acceptance criteria plus data-driven login scenarios.
  *
- * App uses HashRouter: routes are /#/login, /#/dashboard, /#/deposit, etc.
+ * App uses BrowserRouter: routes are /login, /dashboard, /deposit, etc.
  * Session is persisted in localStorage (katalian_session_v1).
  */
 
-import { test, expect, Page } from '@playwright/test';
+import { test, expect } from '@playwright/test';
+import type { Page } from '@playwright/test';
 import { ACTIVE_USER, LOCKED_USER, TEST_USERS } from './data/users';
 
 // Minimal 1×1 PNG used for check image upload tests (avoids binary fixture files)
@@ -21,7 +22,7 @@ const CHECK_BACK_FILE  = { name: 'check-back.png',  mimeType: 'image/png', buffe
 
 /** Reset persisted state so every test starts from a clean slate. */
 async function clearAppState(page: Page) {
-  await page.goto('/#/login');
+  await page.goto('/login');
   await page.evaluate(() => {
     localStorage.removeItem('katalian_users_v1');
     localStorage.removeItem('katalian_session_v1');
@@ -30,19 +31,19 @@ async function clearAppState(page: Page) {
 
 /** Log in via the UI and wait for the dashboard to load. */
 async function login(page: Page, username: string, password: string) {
-  await page.goto('/#/login');
+  await page.goto('/login');
   await page.getByLabel('Secure ID').fill(username);
   await page.getByLabel('Access Code').fill(password);
   await page.getByRole('button', { name: 'Enter Vault Access' }).click();
-  await page.waitForURL(/\/#\/dashboard/);
+  await page.waitForURL(/\/dashboard/);
 }
 
 /**
- * Navigate to /#/deposit, optionally switch to Check method,
+ * Navigate to /deposit, optionally switch to Check method,
  * and fill in the amount – leaves the user on Step 1 with Continue ready.
  */
 async function fillStep1(page: Page, amount: string, method: 'ACH' | 'Check' = 'ACH') {
-  await page.goto('/#/deposit');
+  await page.goto('/deposit');
   await expect(page.getByText('Deposit Configuration')).toBeVisible();
   if (method === 'Check') {
     await page.getByText('Check Deposit').click();
@@ -68,8 +69,8 @@ test.describe('KB-34 – Deposit Facility', () => {
   // ── AC-14: Authentication Guard ───────────────────────────────────────────
 
   test('AC-14: unauthenticated access to /deposit redirects to /login', async ({ page }) => {
-    await page.goto('/#/deposit');
-    await expect(page).toHaveURL(/\/#\/login/);
+    await page.goto('/deposit');
+    await expect(page).toHaveURL(/\/login/);
   });
 
   // ── Data-driven login scenarios (from katalian_logins.csv) ────────────────
@@ -78,34 +79,33 @@ test.describe('KB-34 – Deposit Facility', () => {
     for (const user of TEST_USERS) {
       if (user.status === 'Active') {
         test(`active user "${user.username}" can log in successfully`, async ({ page }) => {
-          await page.goto('/#/login');
+          await page.goto('/login');
           await page.getByLabel('Secure ID').fill(user.username);
           await page.getByLabel('Access Code').fill(user.password);
           await page.getByRole('button', { name: 'Enter Vault Access' }).click();
-          await expect(page).toHaveURL(/\/#\/dashboard/);
+          await expect(page).toHaveURL(/\/dashboard/);
         });
       }
 
       if (user.status === 'Locked') {
         test(`locked user "${user.username}" sees account locked error`, async ({ page }) => {
-          await page.goto('/#/login');
+          await page.goto('/login');
           await page.getByLabel('Secure ID').fill(user.username);
           await page.getByLabel('Access Code').fill(user.password);
           await page.getByRole('button', { name: 'Enter Vault Access' }).click();
           await expect(page.getByText('Account locked for security reasons.')).toBeVisible();
-          await expect(page).toHaveURL(/\/#\/login/);
+          await expect(page).toHaveURL(/\/login/);
         });
 
         test(`locked user "${user.username}" cannot access /deposit`, async ({ page }) => {
-          // Attempt direct navigation without a session
-          await page.goto('/#/deposit');
-          await expect(page).toHaveURL(/\/#\/login/);
+          await page.goto('/deposit');
+          await expect(page).toHaveURL(/\/login/);
         });
       }
     }
 
     test('unknown credentials show authentication failed error', async ({ page }) => {
-      await page.goto('/#/login');
+      await page.goto('/login');
       await page.getByLabel('Secure ID').fill('nonexistentuser');
       await page.getByLabel('Access Code').fill('wrongpassword');
       await page.getByRole('button', { name: 'Enter Vault Access' }).click();
@@ -117,22 +117,21 @@ test.describe('KB-34 – Deposit Facility', () => {
 
   test('AC-1: both deposit methods are displayed on Step 1', async ({ page }) => {
     await login(page, ACTIVE_USER.username, ACTIVE_USER.password);
-    await page.goto('/#/deposit');
+    await page.goto('/deposit');
     await expect(page.getByText('Electronic Transfer')).toBeVisible();
     await expect(page.getByText('Check Deposit')).toBeVisible();
   });
 
   test('AC-1: ACH defaults as selected with emerald highlight', async ({ page }) => {
     await login(page, ACTIVE_USER.username, ACTIVE_USER.password);
-    await page.goto('/#/deposit');
-    // The ACH button's parent button should carry the emerald border class
+    await page.goto('/deposit');
     const achButton = page.getByText('Electronic Transfer').locator('..');
     await expect(achButton).toHaveClass(/border-emerald-500/);
   });
 
   test('AC-1: selecting Check Deposit highlights it with emerald border', async ({ page }) => {
     await login(page, ACTIVE_USER.username, ACTIVE_USER.password);
-    await page.goto('/#/deposit');
+    await page.goto('/deposit');
     await page.getByText('Check Deposit').click();
     const checkButton = page.getByText('Check Deposit').locator('..');
     await expect(checkButton).toHaveClass(/border-emerald-500/);
@@ -145,7 +144,7 @@ test.describe('KB-34 – Deposit Facility', () => {
 
   test('AC-2: destination dropdown lists all accounts with type, number, and balance', async ({ page }) => {
     await login(page, ACTIVE_USER.username, ACTIVE_USER.password);
-    await page.goto('/#/deposit');
+    await page.goto('/deposit');
     const dropdown = page.locator('select');
     await expect(dropdown).toBeVisible();
     const options = await dropdown.locator('option').allTextContents();
@@ -161,20 +160,20 @@ test.describe('KB-34 – Deposit Facility', () => {
 
   test('AC-3: Continue is disabled when no amount is entered', async ({ page }) => {
     await login(page, ACTIVE_USER.username, ACTIVE_USER.password);
-    await page.goto('/#/deposit');
+    await page.goto('/deposit');
     await expect(page.getByRole('button', { name: 'Continue' })).toBeDisabled();
   });
 
   test('AC-3: Continue is disabled when amount is 0', async ({ page }) => {
     await login(page, ACTIVE_USER.username, ACTIVE_USER.password);
-    await page.goto('/#/deposit');
+    await page.goto('/deposit');
     await page.getByLabel('Provision Amount ($)').fill('0');
     await expect(page.getByRole('button', { name: 'Continue' })).toBeDisabled();
   });
 
   test('AC-3: Continue is enabled with a valid positive amount', async ({ page }) => {
     await login(page, ACTIVE_USER.username, ACTIVE_USER.password);
-    await page.goto('/#/deposit');
+    await page.goto('/deposit');
     await page.getByLabel('Provision Amount ($)').fill('500');
     await expect(page.getByRole('button', { name: 'Continue' })).toBeEnabled();
   });
@@ -183,7 +182,7 @@ test.describe('KB-34 – Deposit Facility', () => {
 
   test('AC-12: progress bar is ~33% on Step 1', async ({ page }) => {
     await login(page, ACTIVE_USER.username, ACTIVE_USER.password);
-    await page.goto('/#/deposit');
+    await page.goto('/deposit');
     await expect(page.getByText('Step 1 of 3')).toBeVisible();
     const bar = page.locator('div[style*="width"]');
     await expect(bar).toHaveAttribute('style', /33\.3/);
@@ -215,7 +214,7 @@ test.describe('KB-34 – Deposit Facility', () => {
     await fillStep1(page, '999');
     const closeBtn = page.locator('button').filter({ has: page.locator('[d*="M6 18L18"]') });
     await closeBtn.click();
-    await expect(page).toHaveURL(/\/#\/dashboard/);
+    await expect(page).toHaveURL(/\/dashboard/);
   });
 
   test('AC-13: X button on Step 2 (ACH) returns to dashboard', async ({ page }) => {
@@ -225,7 +224,7 @@ test.describe('KB-34 – Deposit Facility', () => {
     await expect(page.getByText('Funding Source')).toBeVisible();
     const closeBtn = page.locator('button').filter({ has: page.locator('[d*="M6 18L18"]') });
     await closeBtn.click();
-    await expect(page).toHaveURL(/\/#\/dashboard/);
+    await expect(page).toHaveURL(/\/dashboard/);
   });
 
   test('AC-13: X button on Step 2 (Check) returns to dashboard', async ({ page }) => {
@@ -235,7 +234,7 @@ test.describe('KB-34 – Deposit Facility', () => {
     await expect(page.getByText('Mobile Check Capture')).toBeVisible();
     const closeBtn = page.locator('button').filter({ has: page.locator('[d*="M6 18L18"]') });
     await closeBtn.click();
-    await expect(page).toHaveURL(/\/#\/dashboard/);
+    await expect(page).toHaveURL(/\/dashboard/);
   });
 
   test('AC-13: X button on Step 3 returns to dashboard', async ({ page }) => {
@@ -246,7 +245,7 @@ test.describe('KB-34 – Deposit Facility', () => {
     await expect(page.getByText('Final Authorization')).toBeVisible();
     const closeBtn = page.locator('button').filter({ has: page.locator('[d*="M6 18L18"]') });
     await closeBtn.click();
-    await expect(page).toHaveURL(/\/#\/dashboard/);
+    await expect(page).toHaveURL(/\/dashboard/);
   });
 
   test('AC-13: X button is not shown on Step 4 (confirmation)', async ({ page }) => {
@@ -280,7 +279,6 @@ test.describe('KB-34 – Deposit Facility', () => {
       await fillStep1(page, '250');
       await page.getByRole('button', { name: 'Continue' }).click();
       await expect(page.getByText('Funding Source')).toBeVisible();
-      // No text/number inputs should appear in the ACH confirmation step
       await expect(page.locator('input[type="text"], input[type="number"], textarea')).toHaveCount(0);
     });
 
@@ -293,7 +291,6 @@ test.describe('KB-34 – Deposit Facility', () => {
       await expect(page.getByText('Final Authorization')).toBeVisible();
       await expect(page.getByText('$500.00')).toBeVisible();
       await expect(page.getByText('Priority ACH')).toBeVisible();
-      // Target account: Checking with last 4 digits 7890
       await expect(page.getByText(/Checking/)).toBeVisible();
       await expect(page.getByText(/7890/)).toBeVisible();
     });
@@ -332,7 +329,7 @@ test.describe('KB-34 – Deposit Facility', () => {
     test('AC-8 + AC-11: ACH deposit updates balance and Return to Portfolio navigates to dashboard', async ({ page }) => {
       await login(page, ACTIVE_USER.username, ACTIVE_USER.password);
 
-      // Record initial Checking balance visible on dashboard
+      // Verify initial Checking balance on dashboard
       await expect(page.getByText('$5,345.54')).toBeVisible();
 
       await fillStep1(page, '100');
@@ -342,7 +339,7 @@ test.describe('KB-34 – Deposit Facility', () => {
       await expect(page.getByText('Deposit Confirmed')).toBeVisible({ timeout: 10_000 });
 
       await page.getByRole('button', { name: 'Return to Portfolio' }).click();
-      await expect(page).toHaveURL(/\/#\/dashboard/);
+      await expect(page).toHaveURL(/\/dashboard/);
       // Checking balance should now be $5,345.54 + $100.00 = $5,445.54
       await expect(page.getByText('$5,445.54')).toBeVisible();
     });
@@ -351,7 +348,7 @@ test.describe('KB-34 – Deposit Facility', () => {
     test('Deposit button on dashboard navigates to /deposit', async ({ page }) => {
       await login(page, ACTIVE_USER.username, ACTIVE_USER.password);
       await page.getByRole('button', { name: 'Deposit' }).click();
-      await expect(page).toHaveURL(/\/#\/deposit/);
+      await expect(page).toHaveURL(/\/deposit/);
       await expect(page.getByText('Deposit Configuration')).toBeVisible();
     });
   });
@@ -454,7 +451,6 @@ test.describe('KB-34 – Deposit Facility', () => {
       await page.getByRole('button', { name: 'Continue' }).click();
       await page.getByRole('button', { name: 'Authorize Deposit' }).click();
       await expect(page.getByText('Deposit Confirmed')).toBeVisible({ timeout: 10_000 });
-      // ACH-specific message should NOT appear on check confirmation
       await expect(page.getByText(/successfully provisioned/i)).toHaveCount(0);
     });
 
@@ -468,7 +464,7 @@ test.describe('KB-34 – Deposit Facility', () => {
       await page.getByRole('button', { name: 'Authorize Deposit' }).click();
       await expect(page.getByText('Deposit Confirmed')).toBeVisible({ timeout: 10_000 });
       await page.getByRole('button', { name: 'Return to Portfolio' }).click();
-      await expect(page).toHaveURL(/\/#\/dashboard/);
+      await expect(page).toHaveURL(/\/dashboard/);
       // Checking balance: $5,345.54 + $100.00 = $5,445.54
       await expect(page.getByText('$5,445.54')).toBeVisible();
     });
@@ -500,7 +496,7 @@ test.describe('KB-34 – Deposit Facility', () => {
 
     test('Back button is not shown on Step 1', async ({ page }) => {
       await login(page, ACTIVE_USER.username, ACTIVE_USER.password);
-      await page.goto('/#/deposit');
+      await page.goto('/deposit');
       await expect(page.getByRole('button', { name: 'Back' })).toHaveCount(0);
     });
   });

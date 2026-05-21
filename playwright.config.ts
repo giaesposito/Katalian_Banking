@@ -1,5 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
 
+// Use the pre-installed Chromium binary (network policy blocks downloading new ones)
+const CHROMIUM_EXECUTABLE = '/opt/pw-browsers/chromium-1194/chrome-linux/chrome';
+
 export default defineConfig({
   testDir: './tests',
   timeout: 30_000,
@@ -11,6 +14,7 @@ export default defineConfig({
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
     trace: 'retain-on-failure',
+    ignoreHTTPSErrors: true,
   },
   projects: [
     {
@@ -18,6 +22,7 @@ export default defineConfig({
       use: {
         ...devices['Desktop Chrome'],
         baseURL: 'https://katalian-banking.vercel.app',
+        launchOptions: { executablePath: CHROMIUM_EXECUTABLE },
       },
     },
     {
@@ -25,6 +30,16 @@ export default defineConfig({
       use: {
         ...devices['Desktop Chrome'],
         baseURL: 'https://katalian-banking-qa.vercel.app',
+        launchOptions: { executablePath: CHROMIUM_EXECUTABLE },
+      },
+    },
+    {
+      // For running locally when network access to Vercel is restricted
+      name: 'local',
+      use: {
+        ...devices['Desktop Chrome'],
+        baseURL: 'http://localhost:5173',
+        launchOptions: { executablePath: CHROMIUM_EXECUTABLE },
       },
     },
   ],
