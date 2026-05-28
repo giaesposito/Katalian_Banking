@@ -10,6 +10,9 @@ export default defineConfig({
   use: {
     baseURL: 'http://localhost:5173',
     trace: 'on-first-retry',
+    launchOptions: {
+      executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome',
+    },
   },
   projects: [
     {
