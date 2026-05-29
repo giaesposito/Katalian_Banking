@@ -20,6 +20,7 @@
     "react-router-dom": "^6.25.1"
   },
   "devDependencies": {
+    "@playwright/mcp": "^0.0.75",
     "@playwright/test": "^1.60.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
