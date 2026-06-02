@@ -6,6 +6,9 @@ const ENVIRONMENT_URLS: Record<string, string> = {
   production: process.env.PROD_URL       || 'https://katalian-bank.vercel.app',
 };
 
+const ENV = (process.env.TEST_ENV as keyof typeof ENVIRONMENT_URLS) || 'local';
+const BASE_URL = ENVIRONMENT_URLS[ENV];
+
 export default defineConfig({
   testDir: './tests',
   fullyParallel: false,
@@ -13,37 +16,39 @@ export default defineConfig({
   workers: 1,
   reporter: [['html', { open: 'never' }], ['list']],
   use: {
+    baseURL: BASE_URL,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
   },
 
   projects: [
+    // ── Browser projects (run against TEST_ENV, default: local) ───────────
+    {
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] },
+    },
+    {
+      name: 'edge',
+      use: { ...devices['Desktop Chrome'], channel: 'msedge' },
+    },
+
+    // ── Environment-scoped projects (chromium only) ───────────────────────
     {
       name: 'local',
-      use: {
-        ...devices['Desktop Chrome'],
-        baseURL: ENVIRONMENT_URLS.local,
-      },
+      use: { ...devices['Desktop Chrome'], baseURL: ENVIRONMENT_URLS.local },
     },
     {
       name: 'qa',
-      use: {
-        ...devices['Desktop Chrome'],
-        baseURL: ENVIRONMENT_URLS.qa,
-      },
+      use: { ...devices['Desktop Chrome'], baseURL: ENVIRONMENT_URLS.qa },
     },
     {
       name: 'production',
-      use: {
-        ...devices['Desktop Chrome'],
-        baseURL: ENVIRONMENT_URLS.production,
-      },
+      use: { ...devices['Desktop Chrome'], baseURL: ENVIRONMENT_URLS.production },
     },
   ],
 
-  // Dev server is only started when running the 'local' project
   webServer: {
-    command: 'npm run dev',
+    command: './node_modules/.bin/vite --port 5173',
     cwd: '../',
     url: ENVIRONMENT_URLS.local,
     reuseExistingServer: true,
