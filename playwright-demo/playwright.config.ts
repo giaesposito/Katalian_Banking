@@ -25,7 +25,13 @@ export default defineConfig({
     // ── Browser projects (run against TEST_ENV, default: local) ───────────
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        ...devices['Desktop Chrome'],
+        launchOptions: {
+          executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome',
+          args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        },
+      },
     },
     {
       name: 'edge',
