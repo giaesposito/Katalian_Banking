@@ -86,7 +86,7 @@ async function smartFill(page, goal, selectors, value) {
 
 // ── Main test ─────────────────────────────────────────────────────────────────
 (async () => {
-  const browser = await chromium.launch({ headless: true, slowMo: 300 });
+  const browser = await chromium.launch({ headless: false, slowMo: 300 });
   const context = await browser.newContext({
     ignoreHTTPSErrors: true,
     viewport: { width: 1440, height: 900 },
