@@ -4,10 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "playwright test",
-    "test:report": "playwright test && playwright show-report",
-    "test:security": "playwright test tests/security/",
-    "test:headed": "playwright test --headed"
+    "test": "playwright test --project=local",
+    "test:qa": "playwright test --project=qa",
+    "test:prod": "playwright test --project=production",
+    "test:security": "playwright test tests/security/ --project=local",
+    "test:security:qa": "playwright test tests/security/ --project=qa",
+    "test:security:prod": "playwright test tests/security/ --project=production",
+    "test:headed": "playwright test --project=local --headed",
+    "test:report": "playwright show-report"
   },
   "keywords": [],
   "author": "",
