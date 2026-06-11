@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>Verifies that selecting the same account in the To dropdown as is currently selected in From triggers an automatic account swap, preventing a same-account transfer.</description>
+   <name>TC_BT_008_AccountSwapOnSameAccountSelect</name>
+   <tag>balance-transfer, account-swap, validation, ui-behavior</tag>
+   <comment></comment>
+   <testCaseGuid>tc-bt-008</testCaseGuid>
+</TestCaseEntity>

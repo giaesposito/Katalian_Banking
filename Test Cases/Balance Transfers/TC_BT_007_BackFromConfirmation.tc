@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>Verifies that clicking Back on the confirmation screen returns the user to the Transfer Funds form without executing the transfer.</description>
+   <name>TC_BT_007_BackFromConfirmation</name>
+   <tag>balance-transfer, navigation, back-button, confirmation</tag>
+   <comment></comment>
+   <testCaseGuid>tc-bt-007</testCaseGuid>
+</TestCaseEntity>

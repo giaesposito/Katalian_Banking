@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>Verifies that a logged-in user can successfully transfer funds from Checking to Savings account and is redirected to the dashboard upon confirmation.</description>
+   <name>TC_BT_001_ValidTransferCheckingToSavings</name>
+   <tag>balance-transfer, happy-path, checking, savings</tag>
+   <comment></comment>
+   <testCaseGuid>tc-bt-001</testCaseGuid>
+</TestCaseEntity>

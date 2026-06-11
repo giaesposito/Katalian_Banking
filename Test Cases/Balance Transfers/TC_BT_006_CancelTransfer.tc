@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>Verifies that clicking Cancel on the Transfer Funds form navigates the user back to the Dashboard without executing a transfer.</description>
+   <name>TC_BT_006_CancelTransfer</name>
+   <tag>balance-transfer, navigation, cancel</tag>
+   <comment></comment>
+   <testCaseGuid>tc-bt-006</testCaseGuid>
+</TestCaseEntity>

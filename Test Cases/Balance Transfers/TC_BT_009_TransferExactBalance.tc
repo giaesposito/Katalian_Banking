@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>Boundary test: verifies that transferring the exact full balance of the From account succeeds. The confirmation screen must show the correct amount and the transfer must complete.</description>
+   <name>TC_BT_009_TransferExactBalance</name>
+   <tag>balance-transfer, boundary, happy-path, exact-balance</tag>
+   <comment></comment>
+   <testCaseGuid>tc-bt-009</testCaseGuid>
+</TestCaseEntity>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>Verifies that submitting a transfer amount greater than the From account balance shows an 'Insufficient funds' error and keeps the user on the transfer form.</description>
+   <name>TC_BT_003_InsufficientFunds</name>
+   <tag>balance-transfer, negative, validation, insufficient-funds</tag>
+   <comment></comment>
+   <testCaseGuid>tc-bt-003</testCaseGuid>
+</TestCaseEntity>

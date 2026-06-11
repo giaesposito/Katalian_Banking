@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>Verifies that clicking the × close button on the Transfer Funds form navigates the user back to the Dashboard without executing any transfer.</description>
+   <name>TC_BT_010_CloseButtonNavigatesToDashboard</name>
+   <tag>balance-transfer, navigation, close-button</tag>
+   <comment></comment>
+   <testCaseGuid>tc-bt-010</testCaseGuid>
+</TestCaseEntity>

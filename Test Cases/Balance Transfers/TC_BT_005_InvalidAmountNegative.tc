@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description>Verifies that entering a negative transfer amount triggers a 'Please enter a valid amount.' validation error and does not advance to the confirmation screen.</description>
+   <name>TC_BT_005_InvalidAmountNegative</name>
+   <tag>balance-transfer, negative, validation, negative-amount</tag>
+   <comment></comment>
+   <testCaseGuid>tc-bt-005</testCaseGuid>
+</TestCaseEntity>
