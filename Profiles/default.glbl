@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalVariableEntities>
+   <description>Default execution profile for the Katalian Banking test project</description>
+   <name>default</name>
+   <defaultProfile>true</defaultProfile>
+   <tag></tag>
+   <globalVariableEntities>
+      <description>Base URL of the Katalian Banking application under test</description>
+      <initValue>'http://localhost:5173'</initValue>
+      <name>BASE_URL</name>
+   </globalVariableEntities>
+      <globalVariableEntities>
+      <description>Username for the primary test user (bankinguser123)</description>
+      <initValue>'bankinguser123'</initValue>
+      <name>TEST_USERNAME</name>
+   </globalVariableEntities>
+   <globalVariableEntities>
+      <description>Password for the primary test user</description>
+      <initValue>'notapassword@123'</initValue>
+      <name>TEST_PASSWORD</name>
+   </globalVariableEntities>
+   <globalVariableEntities>
+      <description>Account ID for the Checking account used in transfer tests</description>
+      <initValue>'acc1-1'</initValue>
+      <name>CHECKING_ACCOUNT_ID</name>
+   </globalVariableEntities>
+   <globalVariableEntities>
+      <description>Account ID for the Savings account used in transfer tests</description>
+      <initValue>'acc1-2'</initValue>
+      <name>SAVINGS_ACCOUNT_ID</name>
+   </globalVariableEntities>
+   <globalVariableEntities>
+      <description>Starting balance of the Checking account (used for boundary tests)</description>
+      <initValue>'5345.54'</initValue>
+      <name>CHECKING_BALANCE</name>
+   </globalVariableEntities>
+   <globalVariableEntities>
+      <description>Browser to use for test execution (chrome, firefox, edge)</description>
+      <initValue>'chrome'</initValue>
+      <name>BROWSER</name>
+   </globalVariableEntities>
+</GlobalVariableEntities>

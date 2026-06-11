@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+   <classpathentry kind="src" path="Include/scripts/groovy"/>
+   <classpathentry kind="con" path="com.kms.katalon.core.container/Katalon Studio Engine"/>
+   <classpathentry kind="output" path="bin"/>
+</classpath>

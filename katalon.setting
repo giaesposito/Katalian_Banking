@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<KatalonSetting>
+   <executionProfile>default</executionProfile>
+   <webUiSettings>
+      <closeBrowserAfterEachSession>true</closeBrowserAfterEachSession>
+      <defaultSmartWaitTimeout>30</defaultSmartWaitTimeout>
+   </webUiSettings>
+</KatalonSetting>

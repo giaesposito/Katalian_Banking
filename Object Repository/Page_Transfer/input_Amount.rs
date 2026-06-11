@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebElementEntity>
+   <description>Amount input field on the Transfer Funds form (id="amount")</description>
+   <name>input_Amount</name>
+   <tag></tag>
+   <elementGuidId>or-transfer-input-amount</elementGuidId>
+   <selectorCollection>
+      <entry>
+         <key>XPATH</key>
+         <value>//input[@id='amount']</value>
+      </entry>
+      <entry>
+         <key>CSS</key>
+         <value>input#amount</value>
+      </entry>
+   </selectorCollection>
+   <selectorMethod>XPATH</selectorMethod>
+   <useRalativeImagePath>false</useRalativeImagePath>
+   <webElementProperties>
+      <isSelected>true</isSelected>
+      <matchCondition>equals</matchCondition>
+      <name>tag</name>
+      <value>input</value>
+      <type>Main</type>
+   </webElementProperties>
+   <webElementProperties>
+      <isSelected>true</isSelected>
+      <matchCondition>equals</matchCondition>
+      <name>id</name>
+      <value>amount</value>
+      <type>Main</type>
+   </webElementProperties>
+   <webElementProperties>
+      <isSelected>false</isSelected>
+      <matchCondition>equals</matchCondition>
+      <name>type</name>
+      <value>number</value>
+      <type>Main</type>
+   </webElementProperties>
+</WebElementEntity>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebElementEntity>
+   <description>From account dropdown on the Transfer Funds form (id="fromAccount")</description>
+   <name>select_FromAccount</name>
+   <tag></tag>
+   <elementGuidId>or-transfer-select-from</elementGuidId>
+   <selectorCollection>
+      <entry>
+         <key>XPATH</key>
+         <value>//select[@id='fromAccount']</value>
+      </entry>
+      <entry>
+         <key>CSS</key>
+         <value>select#fromAccount</value>
+      </entry>
+   </selectorCollection>
+   <selectorMethod>XPATH</selectorMethod>
+   <useRalativeImagePath>false</useRalativeImagePath>
+   <webElementProperties>
+      <isSelected>true</isSelected>
+      <matchCondition>equals</matchCondition>
+      <name>tag</name>
+      <value>select</value>
+      <type>Main</type>
+   </webElementProperties>
+   <webElementProperties>
+      <isSelected>true</isSelected>
+      <matchCondition>equals</matchCondition>
+      <name>id</name>
+      <value>fromAccount</value>
+      <type>Main</type>
+   </webElementProperties>
+</WebElementEntity>

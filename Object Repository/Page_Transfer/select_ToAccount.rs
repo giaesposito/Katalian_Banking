@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebElementEntity>
+   <description>To account dropdown on the Transfer Funds form (id="toAccount")</description>
+   <name>select_ToAccount</name>
+   <tag></tag>
+   <elementGuidId>or-transfer-select-to</elementGuidId>
+   <selectorCollection>
+      <entry>
+         <key>XPATH</key>
+         <value>//select[@id='toAccount']</value>
+      </entry>
+      <entry>
+         <key>CSS</key>
+         <value>select#toAccount</value>
+      </entry>
+   </selectorCollection>
+   <selectorMethod>XPATH</selectorMethod>
+   <useRalativeImagePath>false</useRalativeImagePath>
+   <webElementProperties>
+      <isSelected>true</isSelected>
+      <matchCondition>equals</matchCondition>
+      <name>tag</name>
+      <value>select</value>
+      <type>Main</type>
+   </webElementProperties>
+   <webElementProperties>
+      <isSelected>true</isSelected>
+      <matchCondition>equals</matchCondition>
+      <name>id</name>
+      <value>toAccount</value>
+      <type>Main</type>
+   </webElementProperties>
+</WebElementEntity>

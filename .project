@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+   <name>Katalian_Banking</name>
+   <comment>Katalon Studio test project for the Katalian Banking web application</comment>
+   <projects></projects>
+   <buildSpec>
+      <buildCommand>
+         <name>com.kms.katalon.core.builder</name>
+         <arguments></arguments>
+      </buildCommand>
+   </buildSpec>
+   <natures>
+      <nature>com.kms.katalon.core.nature</nature>
+   </natures>
+</projectDescription>
